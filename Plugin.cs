@@ -93,7 +93,7 @@ public class Plugin : BaseUnityPlugin
         UndeadMode = Config.Bind(
             "Undead Mode",
             "Undead Mode",
-            true
+            false
         );
         SwitchModeTip = Config.Bind(
             "Undead Mode",
