@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Product>BlackMossTemplate</Product>
+    <Product>Moss-Lib</Product>
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
@@ -44,9 +44,6 @@
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>E:\CasualtiesUnknownDemo\CasualtiesUnknown_Data\Managed\Mono.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="MoreMakeshiftGuns">
-      <HintPath>..\..\..\Downloads\更多临时武器V1.0.1\YUNAndYiJin.MoreMakeshiftGuns\MoreMakeshiftGuns.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>E:\CasualtiesUnknownDemo\CasualtiesUnknown_Data\Managed\netstandard.dll</HintPath>
