@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
+using BepInEx.Configuration;
+using BepInEx.Logging;
+using MossLib.Example;
 using UnityEngine;
 
 namespace MossLib;
@@ -7,6 +12,7 @@ namespace MossLib;
 public class Tools
 {
     // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once MemberCanBePrivate.Global
     public static void Alert(string text, bool important = false)
     {
         PlayerCamera.main.DoAlert(text, important);
@@ -16,14 +22,14 @@ public class Tools
     public static void CheckForWorld()
     {
         if (!(bool) (UnityEngine.Object) PlayerCamera.main)
-            throw new Exception("No world is loaded. Try starting a game?");
+            throw new Exception(ModLocale.GetFormat("tools.checkforworld"));
     }
 
     // ReSharper disable once UnusedMember.Global
     public static void CheckArgumentCount(string[] args, int desired)
     {
         if (args.Length <= desired)
-            throw new Exception($"Expected at least {desired} argument{(desired > 1 ? "s" : (object) "")}, but got {args.Length - 1}.");
+            throw new Exception(ModLocale.GetFormat("tools.checkargumentcount", desired, desired > 1 ? "s" : (object) "", args.Length - 1));
     }
     
     // ReSharper disable once UnusedMember.Global
@@ -33,6 +39,7 @@ public class Tools
     }
     
     // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once MemberCanBePrivate.Global
     public static void LogToConsole(string text, ConsoleScript consoleScript)
     {
         consoleScript.logs.Add($"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
@@ -42,9 +49,67 @@ public class Tools
             return;
         UpdateLogScreen(consoleScript);
     }
+
+    // ReSharper disable once UnusedMember.Global
+    public static void LogToConsoleAndLog(string text, ManualLogSource logger, ConsoleScript consoleScript)
+    {
+        LogToConsole(text, consoleScript);
+        logger.LogInfo(text);
+    }
     
+    // ReSharper disable once UnusedMember.Global
+    public static void LogCla(string text, ManualLogSource logger, ConsoleScript consoleScript, bool important = false)
+    {
+        Alert(text, important);
+        LogToConsole(text, consoleScript);
+        logger.LogInfo(text);
+    }
+    
+    // ReSharper disable once MemberCanBePrivate.Global
     public static void UpdateLogScreen(ConsoleScript consoleScript)
     {
         consoleScript.logText.text = string.Join("\n", consoleScript.logs);
+    }
+    
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedMember.Global
+    public static void ChangeConfig<T>(string guid, ConfigEntry<T> entry, object value)
+    {
+        var assembly = Assembly.GetCallingAssembly();
+        var assemblyLocation = assembly.Location;
+        
+        if (string.IsNullOrEmpty(assemblyLocation))
+            throw new Exception("无法获取程序集位置");
+            
+        var configPath = Path.Combine(
+            Directory.GetParent(
+                Directory.GetParent(
+                    Directory.GetParent(assemblyLocation)!.FullName)!
+                    .FullName)!
+                .FullName,
+            "config", $"{guid}.cfg");
+        
+        if (!File.Exists(configPath))
+            throw new FileNotFoundException($"找不到配置文件：{configPath}");
+            
+        entry.BoxedValue = value;
+        entry.ConfigFile?.Save();
+        
+        File.SetAttributes(configPath, FileAttributes.Normal);
+        File.SetLastWriteTime(configPath, DateTime.Now);
+    }
+    
+    // ReSharper disable once UnusedMember.Global
+    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger, ConsoleScript consoleScript)
+    {
+        ChangeConfig(guid, configEntry, !configEntry.Value);
+        LogToConsoleAndLog(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value), logger, consoleScript);
+    }
+    
+    // ReSharper disable once UnusedMember.Global
+    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger)
+    {
+        ChangeConfig(guid, configEntry, !configEntry.Value);
+        logger.LogInfo(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value));
     }
 }

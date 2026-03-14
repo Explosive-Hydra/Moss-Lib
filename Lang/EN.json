@@ -3,12 +3,20 @@
     "welcome": "Welcome!"
   },
   "command": {
-    "testhello": "TEST HELLO"
+    "mosslib": {
+      "testhello": {
+        "description": "Test Hello",
+        "text": "Hello World! by Moss Lib! {0}!"
+      },
+      "undeadmode": {
+        "name": "Undead mode",
+        "description": "Toggles Undead mode"
+      }
+    }
   },
-  "testhello": {
-    "message": "Hello World by Moss Lib! {0}!",
-    "input": "Name (optional)",
-    "console": "Greetings: {}",
-    "log": "Command executed: hello - {}"
+  "tools": {
+    "checkargumentcount": "Expected at least {0} argument{1}, but got {2}.",
+    "checkforworld": "No world is loaded. Try starting a game?",
+    "switchtype": "{0} has been set to {1}!"
   }
 }

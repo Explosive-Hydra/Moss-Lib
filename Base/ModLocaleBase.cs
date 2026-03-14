@@ -24,7 +24,7 @@ public abstract class ModLocaleBase
     {
         if (_isInitialized)
         {
-            logger.LogWarning("ModLocaleBase has already been initialized");
+            logger.LogWarning($"ModLocaleBase for {pluginName} has already been initialized");
             return;
         }
 

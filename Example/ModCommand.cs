@@ -11,12 +11,15 @@ public class ModCommand : ModCommandBase
     private static ModCommand Instance { get; set; } = new();
     
     private static ModCommand _instance;
+    private const string LocalePre = "command.mosslib.";
+    private static ManualLogSource _logger;
     
     public static void Initialize(ManualLogSource logger)
     { 
         if (_instance != null) return;
         _instance = new ModCommand();
         Instance = _instance;
+        _logger = logger;
         _instance.Initialize(logger, Plugin.Guid, Plugin.Name, Assembly.GetExecutingAssembly());
     }
     
@@ -25,31 +28,32 @@ public class ModCommand : ModCommandBase
     {
         [HarmonyPostfix]
         // ReSharper disable once UnusedMember.Global
-        public static void RegisterCustomCommands()
+        // ReSharper disable once InconsistentNaming
+        public static void RegisterCustomCommands(ConsoleScript __instance)
         {
             ConsoleScript.Commands.Add(new Command(
                 "testhello", 
-                ModLocale.GetFormat("command.testhello"),
-                args =>
+                ModLocale.GetFormat(LocalePre + "testhello.description"),
+                _ =>
                 {
-                    Instance.CheckForWorld();
-                    
-                    var message = ModLocale.GetFormat("testhello.message");
-                    if (args.Length > 1)
-                    {
-                        message = ModLocale.GetFormat("testhello.message", args[1]);
-                    }
-                    
-                    PlayerCamera.main.DoAlert(message);
-                    Instance.LogToConsole(ModLocale.GetFormat("testhello.console", message));
-                    Instance.Logger.LogInfo(ModLocale.GetFormat("testhello.log", message));
+                    Tools.LogCla(ModLocale.GetFormat(LocalePre + "testhello.text", LocalePre), _logger, __instance);
                 },
-                null,
-                ("name", ModLocale.GetFormat("testhello.input"))
+                null
             ));
+            ConsoleScript.Commands.Add(new Command(
+                    "undeadmode", 
+                    ModLocale.GetFormat(LocalePre + "undeadmode.description"),
+                    _ =>
+                    {
+                        Tools.CheckForWorld();
+                        Tools.SwitchType(Plugin.Guid, Plugin.UndeadMode, ModLocale.GetFormat(LocalePre + "undeadmode.name"), _logger, __instance);
+                        UndeadMode.UndeadModeConfigs.Update();
+                    }, null
+                )
+            );
         }
     }
-    
+
     [HarmonyPatch(typeof(ConsoleScript), "Awake")]
     public new class ConsoleScriptAwakePatcher
     {
