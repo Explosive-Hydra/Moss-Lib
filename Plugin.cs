@@ -3,7 +3,6 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using MossLib.Example;
-using MossLib.UndeadMode;
 using UnityEngine;
 
 namespace MossLib;
@@ -99,7 +98,7 @@ public class Plugin : BaseUnityPlugin
         SwitchModeTip = Config.Bind(
             "Undead Mode",
             "Switch Mode Tip",
-            true
+            false
         );
 
         // Limb
@@ -277,7 +276,7 @@ public class Plugin : BaseUnityPlugin
         );
         BadSleepAmount = Config.Bind(
             "Undead Mode - Body",
-            "BadSleep Amount",
+            "Bad Sleep Amount",
             0.0f
         );
         Adrenaline = Config.Bind(
@@ -338,6 +337,7 @@ public class Plugin : BaseUnityPlugin
         // ReSharper disable once UnusedMember.Global
         public static void Postfix()
         {
+            if (!UndeadModeConfigs.UndeadMode) return;
             _healTimer += Time.deltaTime;
             while (_healTimer >= UndeadModeConfigs.HealCountdown)
             {

@@ -1,4 +1,4 @@
-﻿namespace MossLib.UndeadMode;
+﻿namespace MossLib;
 
 public static class UndeadModeConfigs
 {

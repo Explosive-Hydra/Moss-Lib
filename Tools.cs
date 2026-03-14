@@ -100,6 +100,13 @@ public class Tools
     }
     
     // ReSharper disable once UnusedMember.Global
+    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger)
+    {
+        ChangeConfig(guid, configEntry, !configEntry.Value);
+        logger.LogInfo(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value));
+    }
+    
+    // ReSharper disable once UnusedMember.Global
     public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger, ConsoleScript consoleScript)
     {
         ChangeConfig(guid, configEntry, !configEntry.Value);
@@ -107,9 +114,10 @@ public class Tools
     }
     
     // ReSharper disable once UnusedMember.Global
-    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger)
+    // ReSharper disable once UnusedMember.Global
+    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger, ConsoleScript consoleScript, bool important)
     {
         ChangeConfig(guid, configEntry, !configEntry.Value);
-        logger.LogInfo(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value));
+        LogCla(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value), logger, consoleScript, important);
     }
 }
