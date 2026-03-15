@@ -185,25 +185,24 @@ public abstract class ModLocaleBase
 
     protected string GetStringFormatted(string key, int arg1, int arg2)
     {
-        return GetStringFormatted(key, (object)arg1, (object)arg2);
+        return GetStringFormatted(key, arg1, (object)arg2);
     }
 
     protected string GetStringFormatted(string key, float arg1, float arg2)
     {
-        return GetStringFormatted(key, (object)arg1, (object)arg2);
+        return GetStringFormatted(key, arg1, (object)arg2);
     }
 
     protected string GetStringFormatted(string key, int arg1, float arg2)
     {
-        return GetStringFormatted(key, (object)arg1, (object)arg2);
+        return GetStringFormatted(key, arg1, (object)arg2);
     }
 
     protected string GetStringFormatted(string key, float arg1, int arg2)
     {
-        return GetStringFormatted(key, (object)arg1, (object)arg2);
+        return GetStringFormatted(key, arg1, (object)arg2);
     }
-
-
+    
     private static JToken GetJsonValue(JObject jsonObject, string path)
     {
         if (jsonObject == null || string.IsNullOrEmpty(path))

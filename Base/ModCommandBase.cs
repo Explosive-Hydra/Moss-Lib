@@ -1,5 +1,4 @@
-﻿using System;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
@@ -85,19 +84,7 @@ public abstract class ModCommandBase
         // ReSharper disable once UnusedMember.Global
         public static void AddLogCallback()
         {
-            // 具体的日志回调应该在子类中注册
         }
-    }
-
-    protected bool ParseBool(string s)
-    {
-        return !bool.TryParse(s, out var result) ? throw new Exception($"\"{s}\" is not a valid boolean value! (true/false)") : result;
-    }
-    
-    protected void CheckForWorld()
-    {
-        if (!(bool) (UnityEngine.Object) PlayerCamera.main)
-            throw new Exception("No world is loaded. Try starting a game?");
     }
     
     // 提供受保护的方法供子类使用

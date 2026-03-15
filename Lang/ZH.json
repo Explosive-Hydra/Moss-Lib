@@ -9,13 +9,17 @@
         "text": "你好世界 by Moss Lib! {0}!"
       },
       "undeadmode": {
-        "name": "不死模式",
-        "description": "切换不死模式"
+        "description": "切换不死模式",
+        "text": "不死模式"
       }
     }
   },
   "tools": {
-    "checkargumentcount": "预期至少 {0} 个参数 {1}，但得到了 {2} 个。",
+    "changeconfig": {
+      "isnullorempty": "无法获取程序集位置！",
+      "filenotfoundexception": "找不到配置文件 {0}"
+    },
+    "checkargumentcount": "预期至少 {0} 个参数 {1}，但得到了 {2} 个",
     "checkforworld": "没有加载任何世界。要不试试开始游戏？",
     "switchtype": "已将 {0} 设置为 {1}！"
   }

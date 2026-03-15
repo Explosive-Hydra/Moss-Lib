@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace MossLib;
 
-public class Tools
+public static class Tools
 {
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once MemberCanBePrivate.Global
@@ -51,6 +51,7 @@ public class Tools
     }
 
     // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once MemberCanBePrivate.Global
     public static void LogToConsoleAndLog(string text, ManualLogSource logger, ConsoleScript consoleScript)
     {
         LogToConsole(text, consoleScript);
@@ -79,7 +80,7 @@ public class Tools
         var assemblyLocation = assembly.Location;
         
         if (string.IsNullOrEmpty(assemblyLocation))
-            throw new Exception("无法获取程序集位置");
+            throw new Exception(ModLocale.GetFormat("tools.changeconfig.isnullorempty"));
             
         var configPath = Path.Combine(
             Directory.GetParent(
@@ -90,13 +91,10 @@ public class Tools
             "config", $"{guid}.cfg");
         
         if (!File.Exists(configPath))
-            throw new FileNotFoundException($"找不到配置文件：{configPath}");
+            throw new FileNotFoundException(ModLocale.GetFormat("tools.changeconfig.filenotfoundexception", configPath));
             
         entry.BoxedValue = value;
         entry.ConfigFile?.Save();
-        
-        File.SetAttributes(configPath, FileAttributes.Normal);
-        File.SetLastWriteTime(configPath, DateTime.Now);
     }
     
     // ReSharper disable once UnusedMember.Global

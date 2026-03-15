@@ -9,7 +9,6 @@ namespace MossLib;
 
 [BepInPlugin(Guid, Name, "1.0.1")]
 public class Plugin : BaseUnityPlugin
-
 {
     // ReSharper disable once MemberCanBePrivate.Global
     internal new static ManualLogSource Logger;
