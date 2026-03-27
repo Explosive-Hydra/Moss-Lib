@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
-using System.Reflection;
+using System.Linq;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using HarmonyLib;
 using MossLib.Example;
 using UnityEngine;
 
@@ -11,6 +11,8 @@ namespace MossLib;
 
 public static class Tools
 {
+    private static ConsoleScript _consoleScript;
+    
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once MemberCanBePrivate.Global
     public static void Alert(string text, bool important = false)
@@ -40,30 +42,29 @@ public static class Tools
     
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once MemberCanBePrivate.Global
-    public static void LogToConsole(string text, ConsoleScript consoleScript)
+    public static void LogToConsole(string text)
     {
-        consoleScript.logs.Add($"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
-        if (consoleScript.logs.Count > 100)
-            consoleScript.logs.RemoveAt(0);
-        if (!consoleScript.active)
+        _consoleScript.logs.Add($"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
+        if (_consoleScript.logs.Count > 100)
+            _consoleScript.logs.RemoveAt(0);
+        if (!_consoleScript.active)
             return;
-        UpdateLogScreen(consoleScript);
+        UpdateLogScreen(_consoleScript);
     }
 
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once MemberCanBePrivate.Global
-    public static void LogToConsoleAndLog(string text, ManualLogSource logger, ConsoleScript consoleScript)
+    public static void LogToConsoleAndLog(string text, ManualLogSource logger)
     {
-        LogToConsole(text, consoleScript);
+        LogToConsole(text);
         logger.LogInfo(text);
     }
     
     // ReSharper disable once UnusedMember.Global
-    public static void LogCla(string text, ManualLogSource logger, ConsoleScript consoleScript, bool important = false)
+    public static void LogCla(string text, ManualLogSource logger, bool important = false)
     {
         Alert(text, important);
-        LogToConsole(text, consoleScript);
-        logger.LogInfo(text);
+        LogToConsoleAndLog(text, logger);
     }
     
     // ReSharper disable once MemberCanBePrivate.Global
@@ -76,23 +77,6 @@ public static class Tools
     // ReSharper disable once UnusedMember.Global
     public static void ChangeConfig<T>(string guid, ConfigEntry<T> entry, object value)
     {
-        var assembly = Assembly.GetCallingAssembly();
-        var assemblyLocation = assembly.Location;
-        
-        if (string.IsNullOrEmpty(assemblyLocation))
-            throw new Exception(ModLocale.GetFormat("tools.changeconfig.isnullorempty"));
-            
-        var configPath = Path.Combine(
-            Directory.GetParent(
-                Directory.GetParent(
-                    Directory.GetParent(assemblyLocation)!.FullName)!
-                    .FullName)!
-                .FullName,
-            "config", $"{guid}.cfg");
-        
-        if (!File.Exists(configPath))
-            throw new FileNotFoundException(ModLocale.GetFormat("tools.changeconfig.filenotfoundexception", configPath));
-            
         entry.BoxedValue = value;
         entry.ConfigFile?.Save();
     }
@@ -105,17 +89,51 @@ public static class Tools
     }
     
     // ReSharper disable once UnusedMember.Global
-    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger, ConsoleScript consoleScript)
+    // ReSharper disable once UnusedMember.Global
+    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger, bool important)
     {
         ChangeConfig(guid, configEntry, !configEntry.Value);
-        LogToConsoleAndLog(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value), logger, consoleScript);
+        LogCla(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value), logger, important);
     }
     
-    // ReSharper disable once UnusedMember.Global
-    // ReSharper disable once UnusedMember.Global
-    public static void SwitchType(string guid, ConfigEntry<bool> configEntry, string configName, ManualLogSource logger, ConsoleScript consoleScript, bool important)
+    [HarmonyPatch(typeof(ConsoleScript), "Awake")]
+    public class ConsoleScriptAwakePatcher
     {
-        ChangeConfig(guid, configEntry, !configEntry.Value);
-        LogCla(ModLocale.GetFormat("tools.switchtype", configName, configEntry.Value), logger, consoleScript, important);
+        [HarmonyPostfix]
+        // ReSharper disable once UnusedMember.Global
+        // ReSharper disable once InconsistentNaming
+        public static void GetConsoleScript(ConsoleScript __instance)
+        {
+            _consoleScript = __instance;
+        }
+    }
+    
+    public static bool IsMultiplayerActive()
+    {
+        try
+        {
+            var mpAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(a => a.GetName().Name == "KrokoshaCasualtiesMP");
+                
+            if (mpAssembly != null)
+            {
+                var mpType = mpAssembly.GetType("KrokoshaCasualtiesMP.KrokoshaScavMultiplayer");
+                if (mpType != null)
+                {
+                    var networkSystemField = mpType.GetField("network_system_is_running", 
+                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                    if (networkSystemField != null)
+                    {
+                        var isRunning = networkSystemField.GetValue(null) as bool?;
+                        return isRunning == true;
+                    }
+                }
+            }
+        }
+        catch
+        {
+        }
+
+        return false;
     }
 }

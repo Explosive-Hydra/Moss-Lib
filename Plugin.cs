@@ -1,7 +1,9 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using KrokoshaCasualtiesMP;
 using MossLib.Example;
 using UnityEngine;
 
@@ -15,14 +17,18 @@ public class Plugin : BaseUnityPlugin
     public const string Guid = "blackmoss.mosslib";
     public const string Name = "Moss Lib";
     private readonly Harmony _harmony = new(Guid);
+
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public static Plugin Instance { get; private set; } = null!;
-    
+
+    private static readonly bool Mutliplayer = Tools.IsMultiplayerActive();
+
     // General
     public static ConfigEntry<float> HealCountdown;
-    public static ConfigEntry<bool>  UndeadMode;
-    public static ConfigEntry<bool>  SwitchModeTip;
-    
+    public static ConfigEntry<bool> UndeadMode;
+    public static ConfigEntry<bool> SwitchModeTip;
+    public static ConfigEntry<List<string>> MutliplayerUndead;
+
     // Limb
     public static ConfigEntry<float> MuscleHeadth;
     public static ConfigEntry<float> SkinHealth;
@@ -31,15 +37,15 @@ public class Plugin : BaseUnityPlugin
     public static ConfigEntry<float> InfectionAmount;
     public static ConfigEntry<float> BleedAmount;
     public static ConfigEntry<float> Painkillers;
-    public static ConfigEntry<int>   Shrapnel;
-    public static ConfigEntry<bool>  Infected;
-    public static ConfigEntry<bool>  Dismembered;
-    public static ConfigEntry<bool>  BlockedBleeding;
-    
+    public static ConfigEntry<int> Shrapnel;
+    public static ConfigEntry<bool> Infected;
+    public static ConfigEntry<bool> Dismembered;
+    public static ConfigEntry<bool> BlockedBleeding;
+
     // Body
     public static ConfigEntry<float> BrainHealth;
     public static ConfigEntry<float> BloodAmount;
-    public static ConfigEntry<int>   BloodViscous;
+    public static ConfigEntry<int> BloodViscous;
     public static ConfigEntry<float> OxygenAmount;
     public static ConfigEntry<float> Hunger;
     public static ConfigEntry<float> Thirst;
@@ -65,24 +71,25 @@ public class Plugin : BaseUnityPlugin
     public static ConfigEntry<float> CurAdrenaline;
     public static ConfigEntry<float> AntibioticImmunityTime;
     public static ConfigEntry<float> BrainGrowSickness;
-    public static ConfigEntry<bool>  Disfigured;
-    public static ConfigEntry<bool>  EyeGone;
-    public static ConfigEntry<bool>  TriedRollingLastStand;
-    public static ConfigEntry<bool>  SuccesfullyRolledLastStand;
+    public static ConfigEntry<bool> Disfigured;
+    public static ConfigEntry<bool> EyeGone;
+    public static ConfigEntry<bool> TriedRollingLastStand;
+    public static ConfigEntry<bool> SuccesfullyRolledLastStand;
     public static ConfigEntry<float> LastStandTime;
 
     public void Awake()
     {
         Logger = base.Logger;
         Instance = this;
-            
+        Logger.LogInfo(Mutliplayer);
+
         ModLocale.Initialize(Logger);
         ModCommand.Initialize(Logger);
-            
+
         _harmony.PatchAll();
-            
+
         Logger.LogInfo(ModLocale.GetFormat("log.welcome"));
-        
+
         //  General
         HealCountdown = Config.Bind(
             "Undead Mode",
@@ -99,6 +106,14 @@ public class Plugin : BaseUnityPlugin
             "Switch Mode Tip",
             false
         );
+        
+        
+        MutliplayerUndead = Config.Bind(
+            "Undead Mode", 
+            "Mutliplayer Undead", 
+            new List<string>(), 
+            "We are Undead!");
+        
 
         // Limb
         MuscleHeadth = Config.Bind(
@@ -156,7 +171,7 @@ public class Plugin : BaseUnityPlugin
             "Blocked Bleeding",
             false
         );
-        
+
         // Body
         BrainHealth = Config.Bind(
             "Undead Mode - Body",
@@ -323,24 +338,32 @@ public class Plugin : BaseUnityPlugin
             "Last Stand Time",
             -1000f
         );
-        
+
         UndeadModeConfigs.Update();
     }
-    
+
     [HarmonyPatch(typeof(Body), "Update")]
     public class BodyPatch
     {
         private static float _healTimer;
 
-        [HarmonyPostfix]
         // ReSharper disable once UnusedMember.Global
         public static void Postfix()
         {
             if (!UndeadModeConfigs.UndeadMode) return;
+
             _healTimer += Time.deltaTime;
             while (_healTimer >= UndeadModeConfigs.HealCountdown)
             {
-                Heal();
+                if (!Mutliplayer)
+                {
+                    Heal();
+                }
+                else
+                {
+                    MutliplayerHeal();
+                }
+
                 _healTimer -= UndeadModeConfigs.HealCountdown;
             }
         }
@@ -350,53 +373,53 @@ public class Plugin : BaseUnityPlugin
     {
         foreach (var limb in PlayerCamera.main.body.limbs)
         {
-            limb.muscleHealth     = UndeadModeConfigs.MuscleHealth;
-            limb.skinHealth       = UndeadModeConfigs.SkinHealth;
-            limb.boneHealTimer    = UndeadModeConfigs.BoneHealTImer;
+            limb.muscleHealth = UndeadModeConfigs.MuscleHealth;
+            limb.skinHealth = UndeadModeConfigs.SkinHealth;
+            limb.boneHealTimer = UndeadModeConfigs.BoneHealTImer;
             limb.dislocationTimer = UndeadModeConfigs.DislocationTimer;
-            limb.infectionAmount  = UndeadModeConfigs.InfectionAmount;
-            limb.bleedAmount      = UndeadModeConfigs.BleedAmount;
-            limb.pain             = UndeadModeConfigs.Painkillers;
-            limb.shrapnel         = UndeadModeConfigs.Shrapnel;
-            limb.infected         = UndeadModeConfigs.Infected;
-            limb.dismembered      = UndeadModeConfigs.Dismembered;
-            limb.blockedBleeding  = UndeadModeConfigs.BlockedBleeding;
+            limb.infectionAmount = UndeadModeConfigs.InfectionAmount;
+            limb.bleedAmount = UndeadModeConfigs.BleedAmount;
+            limb.pain = UndeadModeConfigs.Painkillers;
+            limb.shrapnel = UndeadModeConfigs.Shrapnel;
+            limb.infected = UndeadModeConfigs.Infected;
+            limb.dismembered = UndeadModeConfigs.Dismembered;
+            limb.blockedBleeding = UndeadModeConfigs.BlockedBleeding;
         }
 
         var body = PlayerCamera.main.body;
-        body.brainHealth                = UndeadModeConfigs.BrainHealth;
-        body.bloodAmount                = UndeadModeConfigs.BloodAmount;
-        body.bloodViscous               = UndeadModeConfigs.BloodViscous;
-        body.oxygenAmount               = UndeadModeConfigs.OxygenAmount;
-        body.hunger                     = UndeadModeConfigs.Hunger;
-        body.thirst                     = UndeadModeConfigs.Thirst;
-        body.temperature                = UndeadModeConfigs.Temperature;
-        body.consciousness              = UndeadModeConfigs.Consciousness;
-        body.stamina                    = UndeadModeConfigs.Stamina;
-        body.energy                     = UndeadModeConfigs.Energy;
-        body.sicknessAmount             = UndeadModeConfigs.SicknessAmount;
-        body.septicShock                = UndeadModeConfigs.SepticShock;
-        body.radiationSickness          = UndeadModeConfigs.RadiationSickness;
-        body.traumaAmount               = UndeadModeConfigs.TraumaAmount;
-        body.internalBleeding           = UndeadModeConfigs.InternalBleeding;
-        body.hemothorax                 = UndeadModeConfigs.Hemothorax;
-        body.dirtyness                  = UndeadModeConfigs.Dirtyness;
-        body.wetness                    = UndeadModeConfigs.Wetness;
-        body.happiness                  = UndeadModeConfigs.Happiness;
-        body.antidepressantHappiness    = UndeadModeConfigs.AntidepressantHappiness;
-        body.opiateHappiness            = UndeadModeConfigs.OpiateHappiness;
-        body.hearingLoss                = UndeadModeConfigs.HearingLoss;
-        body.weightOffset               = UndeadModeConfigs.WeightOffset;
-        body.badSleepAmount             = UndeadModeConfigs.BadSleepAmount;
-        body.adrenaline                 = UndeadModeConfigs.Adrenaline;
-        body.curAdrenaline              = UndeadModeConfigs.CurAdrenaline;
-        body.antibioticImmunityTime     = UndeadModeConfigs.AntibioticImmunityTime;
-        body.brainGrowSickness          = UndeadModeConfigs.BrainGrowSickness;
-        body.disfigured                 = UndeadModeConfigs.Disfigured;
-        body.eyeGone                    = UndeadModeConfigs.EyeGone;
-        body.triedRollingLastStand      = UndeadModeConfigs.TriedRollingLastStand;
+        body.brainHealth = UndeadModeConfigs.BrainHealth;
+        body.bloodAmount = UndeadModeConfigs.BloodAmount;
+        body.bloodViscous = UndeadModeConfigs.BloodViscous;
+        body.oxygenAmount = UndeadModeConfigs.OxygenAmount;
+        body.hunger = UndeadModeConfigs.Hunger;
+        body.thirst = UndeadModeConfigs.Thirst;
+        body.temperature = UndeadModeConfigs.Temperature;
+        body.consciousness = UndeadModeConfigs.Consciousness;
+        body.stamina = UndeadModeConfigs.Stamina;
+        body.energy = UndeadModeConfigs.Energy;
+        body.sicknessAmount = UndeadModeConfigs.SicknessAmount;
+        body.septicShock = UndeadModeConfigs.SepticShock;
+        body.radiationSickness = UndeadModeConfigs.RadiationSickness;
+        body.traumaAmount = UndeadModeConfigs.TraumaAmount;
+        body.internalBleeding = UndeadModeConfigs.InternalBleeding;
+        body.hemothorax = UndeadModeConfigs.Hemothorax;
+        body.dirtyness = UndeadModeConfigs.Dirtyness;
+        body.wetness = UndeadModeConfigs.Wetness;
+        body.happiness = UndeadModeConfigs.Happiness;
+        body.antidepressantHappiness = UndeadModeConfigs.AntidepressantHappiness;
+        body.opiateHappiness = UndeadModeConfigs.OpiateHappiness;
+        body.hearingLoss = UndeadModeConfigs.HearingLoss;
+        body.weightOffset = UndeadModeConfigs.WeightOffset;
+        body.badSleepAmount = UndeadModeConfigs.BadSleepAmount;
+        body.adrenaline = UndeadModeConfigs.Adrenaline;
+        body.curAdrenaline = UndeadModeConfigs.CurAdrenaline;
+        body.antibioticImmunityTime = UndeadModeConfigs.AntibioticImmunityTime;
+        body.brainGrowSickness = UndeadModeConfigs.BrainGrowSickness;
+        body.disfigured = UndeadModeConfigs.Disfigured;
+        body.eyeGone = UndeadModeConfigs.EyeGone;
+        body.triedRollingLastStand = UndeadModeConfigs.TriedRollingLastStand;
         body.succesfullyRolledLastStand = UndeadModeConfigs.SuccesfullyRolledLastStand;
-        body.lastStandTime              = UndeadModeConfigs.LastStandTime;
+        body.lastStandTime = UndeadModeConfigs.LastStandTime;
 
         if (PlayerCamera.main.body.TryGetComponent(out Painkillers component1))
             Destroy(component1);
@@ -404,6 +427,99 @@ public class Plugin : BaseUnityPlugin
             Destroy(component2);
         if (PlayerCamera.main.body.TryGetComponent(out Antidepressants component3))
             Destroy(component3);
+        CoUtils.instance.Stop("bleach");
+        CoUtils.instance.Stop("mercury");
+    }
+
+    private static void MutliplayerHeal()
+    {
+        var whiteList = UndeadModeConfigs.MPUndeadMode;
+
+        var allBodies = FindObjectsOfType<Body>();
+
+        foreach (var body in allBodies)
+        {
+            if (!IsPlayerInWhiteList(body, whiteList)) continue;
+
+            ApplyHealToBody(body);
+        }
+    }
+
+    private static bool IsPlayerInWhiteList(Body body, List<string> whiteList)
+    {
+        try
+        {
+            var netPlayer = NetPlayer.GetNetPlayerFromBody(body);
+            if (netPlayer == null) return false;
+
+            var playerName = netPlayer.playername;
+
+            return whiteList.Contains(playerName);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void ApplyHealToBody(Body targetBody)
+    {
+        foreach (var limb in targetBody.limbs)
+        {
+            limb.muscleHealth = UndeadModeConfigs.MuscleHealth;
+            limb.skinHealth = UndeadModeConfigs.SkinHealth;
+            limb.boneHealTimer = UndeadModeConfigs.BoneHealTImer;
+            limb.dislocationTimer = UndeadModeConfigs.DislocationTimer;
+            limb.infectionAmount = UndeadModeConfigs.InfectionAmount;
+            limb.bleedAmount = UndeadModeConfigs.BleedAmount;
+            limb.pain = UndeadModeConfigs.Painkillers;
+            limb.shrapnel = UndeadModeConfigs.Shrapnel;
+            limb.infected = UndeadModeConfigs.Infected;
+            limb.dismembered = UndeadModeConfigs.Dismembered;
+            limb.blockedBleeding = UndeadModeConfigs.BlockedBleeding;
+        }
+
+        targetBody.brainHealth = UndeadModeConfigs.BrainHealth;
+        targetBody.bloodAmount = UndeadModeConfigs.BloodAmount;
+        targetBody.bloodViscous = UndeadModeConfigs.BloodViscous;
+        targetBody.oxygenAmount = UndeadModeConfigs.OxygenAmount;
+        targetBody.hunger = UndeadModeConfigs.Hunger;
+        targetBody.thirst = UndeadModeConfigs.Thirst;
+        targetBody.temperature = UndeadModeConfigs.Temperature;
+        targetBody.consciousness = UndeadModeConfigs.Consciousness;
+        targetBody.stamina = UndeadModeConfigs.Stamina;
+        targetBody.energy = UndeadModeConfigs.Energy;
+        targetBody.sicknessAmount = UndeadModeConfigs.SicknessAmount;
+        targetBody.septicShock = UndeadModeConfigs.SepticShock;
+        targetBody.radiationSickness = UndeadModeConfigs.RadiationSickness;
+        targetBody.traumaAmount = UndeadModeConfigs.TraumaAmount;
+        targetBody.internalBleeding = UndeadModeConfigs.InternalBleeding;
+        targetBody.hemothorax = UndeadModeConfigs.Hemothorax;
+        targetBody.dirtyness = UndeadModeConfigs.Dirtyness;
+        targetBody.wetness = UndeadModeConfigs.Wetness;
+        targetBody.happiness = UndeadModeConfigs.Happiness;
+        targetBody.antidepressantHappiness = UndeadModeConfigs.AntidepressantHappiness;
+        targetBody.opiateHappiness = UndeadModeConfigs.OpiateHappiness;
+        targetBody.hearingLoss = UndeadModeConfigs.HearingLoss;
+        targetBody.weightOffset = UndeadModeConfigs.WeightOffset;
+        targetBody.badSleepAmount = UndeadModeConfigs.BadSleepAmount;
+        targetBody.adrenaline = UndeadModeConfigs.Adrenaline;
+        targetBody.curAdrenaline = UndeadModeConfigs.CurAdrenaline;
+        targetBody.antibioticImmunityTime = UndeadModeConfigs.AntibioticImmunityTime;
+        targetBody.brainGrowSickness = UndeadModeConfigs.BrainGrowSickness;
+        targetBody.disfigured = UndeadModeConfigs.Disfigured;
+        targetBody.eyeGone = UndeadModeConfigs.EyeGone;
+        targetBody.triedRollingLastStand = UndeadModeConfigs.TriedRollingLastStand;
+        targetBody.succesfullyRolledLastStand = UndeadModeConfigs.SuccesfullyRolledLastStand;
+        targetBody.lastStandTime = UndeadModeConfigs.LastStandTime;
+
+        if (targetBody.TryGetComponent(out Painkillers component1))
+            Destroy(component1);
+        if (targetBody.TryGetComponent(out SleepingPills component2))
+            Destroy(component2);
+        if (targetBody.TryGetComponent(out Antidepressants component3))
+            Destroy(component3);
+
         CoUtils.instance.Stop("bleach");
         CoUtils.instance.Stop("mercury");
     }

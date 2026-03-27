@@ -46,7 +46,7 @@ public class ModCommand : ModCommandBase
                     _ =>
                     {
                         Tools.CheckForWorld();
-                        Tools.SwitchType(Plugin.Guid, Plugin.UndeadMode, ModLocale.GetFormat(LocalePre + "undeadmode.text"), _logger, __instance, UndeadModeConfigs.SwitchModeTip);
+                        Tools.SwitchType(Plugin.Guid, Plugin.UndeadMode, ModLocale.GetFormat(LocalePre + "undeadmode.text"), _logger, UndeadModeConfigs.SwitchModeTip);
                         UndeadModeConfigs.Update();
                     }, null
                 )
