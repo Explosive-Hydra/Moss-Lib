@@ -1,4 +1,6 @@
-﻿namespace MossLib;
+﻿using System.Collections.Generic;
+
+namespace MossLib;
 
 public static class UndeadModeConfigs
 {
@@ -6,6 +8,7 @@ public static class UndeadModeConfigs
     public static bool  UndeadMode;
     public static float HealCountdown;
     public static bool  SwitchModeTip;
+    public static List<string> MPUndeadMode;
     
     // Limb
     public static float MuscleHealth;
@@ -61,6 +64,7 @@ public static class UndeadModeConfigs
         UndeadMode    = Plugin.UndeadMode.Value;
         HealCountdown = Plugin.HealCountdown.Value;
         SwitchModeTip = Plugin.SwitchModeTip.Value;
+        MPUndeadMode = Plugin.MutliplayerUndead.Value;
         
         // Limb
         MuscleHealth     = Plugin.MuscleHeadth.Value;
