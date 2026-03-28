@@ -1,0 +1,26 @@
+﻿{
+  "log": {
+    "welcome": "歡迎！"
+  },
+  "command": {
+    "mosslib": {
+      "testhello": {
+        "description": "測試Hello",
+        "text": "你好世界 by Moss Lib! {0}!"
+      },
+      "undeadmode": {
+        "description": "切換不死模式",
+        "text": "不死模式"
+      }
+    }
+  },
+  "tools": {
+    "changeconfig": {
+      "isnullorempty": "無法獲取程式集位置！",
+      "filenotfoundexception": "找不到配置文件 {0}"
+    },
+    "checkargumentcount": "預期至少 {0} 个參數 {1}，但得到了 {2} 个",
+    "checkforworld": "沒有加載任何世界。要不試試開始遊戲？",
+    "switchtype": "已將 {0} 設置為 {1}！"
+  }
+}

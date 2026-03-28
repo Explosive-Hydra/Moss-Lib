@@ -17,7 +17,7 @@ public abstract class ModCommandBase
     {
         if (_isInitialized)
         {
-            logger.LogWarning("ModCommandBase has already been initialized");
+            logger.LogWarning($"ModCommandBase for {pluginName} has already been initialized");
             return;
         }
 
