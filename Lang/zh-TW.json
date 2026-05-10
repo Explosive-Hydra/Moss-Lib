@@ -21,6 +21,7 @@
     },
     "checkargumentcount": "預期至少 {0} 个參數 {1}，但得到了 {2} 个",
     "checkforworld": "沒有加載任何世界。要不試試開始遊戲？",
+    "setblock": "在 {0} 生成 {1} 失敗：{2}",
     "switchtype": "已將 {0} 設置為 {1}！"
   }
 }

@@ -47,16 +47,28 @@ public static class Tools
         UpdateLogScreen(_consoleScript);
     }
 
-    public static void LogToConsoleAndLog(string text, ManualLogSource logger)
+    public static void LogInfo(string text, ManualLogSource logger)
     {
         LogToConsole(text);
         logger.LogInfo(text);
     }
     
+    public static void LogError(string text, ManualLogSource logger)
+    {
+        LogToConsole($"[ERROR] {text}");
+        logger.LogError(text);
+    }
+    
+    public static void LogWarning(string text, ManualLogSource logger)
+    {
+        LogToConsole($"[WARNING] {text}");
+        logger.LogWarning(text);
+    }
+    
     public static void LogCla(string text, ManualLogSource logger, bool important = false)
     {
         Alert(text, important);
-        LogToConsoleAndLog(text, logger);
+        LogInfo(text, logger);
     }
     
     public static void UpdateLogScreen(ConsoleScript consoleScript)
@@ -91,5 +103,29 @@ public static class Tools
         {
             _consoleScript = __instance;
         }
+    }
+    
+    public static void SetBlock(int x, int y, ushort block)
+    {
+        Vector2 vector2 = new(x, y);
+        SetBlock(vector2, block);
+    }
+    
+    public static void SetBlock(Vector2 vector2, ushort block)
+    {
+        CheckForWorld();
+        try
+        {
+            WorldGeneration.world.SetBlock(WorldGeneration.world.WorldToBlockPos(vector2), block);
+        }
+        catch (Exception ex)
+        { 
+            Error(ModLocale.GetFormat("tools.setblock", vector2, block, ex));
+        }
+    }
+
+    private static void Error(string text)
+    {
+        LogError(text, Plugin.Logger);
     }
 }

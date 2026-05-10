@@ -40,17 +40,17 @@ public class ModCommand : ModCommandBase
                 },
                 null
             ));
-            ConsoleScript.Commands.Add(new Command(
-                    "undeadmode", 
-                    ModLocale.GetFormat(LocalePre + "undeadmode.description"),
-                    _ =>
-                    {
-                        Tools.CheckForWorld();
-                        Tools.SwitchType(Plugin.UndeadMode, ModLocale.GetFormat(LocalePre + "undeadmode.text"), _logger, UndeadModeConfigs.SwitchModeTip);
-                        UndeadModeConfigs.Update();
-                    }, null
-                )
-            );
+            // ConsoleScript.Commands.Add(new Command(
+            //         "undeadmode", 
+            //         ModLocale.GetFormat(LocalePre + "undeadmode.description"),
+            //         _ =>
+            //         {
+            //             Tools.CheckForWorld();
+            //             Tools.SwitchType(Plugin.UndeadMode, ModLocale.GetFormat(LocalePre + "undeadmode.text"), _logger, UndeadModeConfigs.SwitchModeTip);
+            //             UndeadModeConfigs.Update();
+            //         }, null
+            //     )
+            // );
         }
     }
 

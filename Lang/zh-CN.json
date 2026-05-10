@@ -21,6 +21,7 @@
     },
     "checkargumentcount": "预期至少 {0} 个参数 {1}，但得到了 {2} 个",
     "checkforworld": "没有加载任何世界。要不试试开始游戏？",
+    "setblock": "在 {0} 生成 {1} 失败：{2}",
     "switchtype": "已将 {0} 设置为 {1}！"
   }
 }

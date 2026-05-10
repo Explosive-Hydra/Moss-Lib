@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/Black-Moss/BlackMossTemplate</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Black-Moss/BlackMossTemplate</RepositoryUrl>
     <PackageId>MossLib</PackageId>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
