@@ -123,6 +123,25 @@ public static class Tools
             Error(ModLocale.GetFormat("tools.setblock", vector2, block, ex));
         }
     }
+    
+    public static void SetItem(int x, int y, string item)
+    {
+        Vector2 vector2 = new(x, y);
+        SetItem(vector2, item);
+    }
+
+    public static void SetItem(Vector2 vector2, string item)
+    {
+        CheckForWorld();
+        try
+        {
+            Utils.Create(item, vector2, 0.0f);
+        }
+        catch (Exception ex)
+        { 
+            Error(ModLocale.GetFormat("tools.setitem", vector2, item, ex));
+        }
+    }
 
     private static void Error(string text)
     {
