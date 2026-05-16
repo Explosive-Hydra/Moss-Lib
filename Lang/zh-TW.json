@@ -1,28 +1,56 @@
 ﻿{
   "log": {
-    "welcome": "歡迎！"
+    "welcome": "歡迎!"
   },
   "command": {
-    "mosslib": {
-      "testhello": {
-        "description": "測試Hello",
-        "text": "你好世界 by Moss Lib! {0}!"
-      },
-      "undeadmode": {
-        "description": "切換不死模式",
-        "text": "不死模式"
-      }
+    "testhello": {
+      "description": "測試Hello",
+      "text": "你好世界 by Moss Lib! {0}!"
+    },
+    "undeadmode": {
+      "description": "切換不死模式",
+      "text": "不死模式"
     }
   },
-  "tools": {
-    "changeconfig": {
-      "isnullorempty": "無法獲取程式集位置！",
-      "filenotfoundexception": "找不到配置文件 {0}"
+  "tool": {
+    "console": {
+      "nullorempty": "命令不能為空或空值",
+      "notinitialized": "ConsoleScript 未初始化"
     },
-    "checkargumentcount": "預期至少 {0} 个參數 {1}，但得到了 {2} 个",
-    "checkforworld": "沒有加載任何世界。要不試試開始遊戲？",
-    "setblock": "在 {0} 生成 {1} 失敗：{2}",
-    "setitem": "在 {0} 生成 {1} 失敗：{2}",
-    "switchtype": "已將 {0} 設置為 {1}！"
+    "world": {
+      "checkforworld": "沒有加載任何世界。要不試試開始遊戲?",
+      "setblock": "在 {0} 生成方塊 {1} 失敗:{2}",
+      "setitem": "在 {0} 生成物品 {1} 失敗:{2}",
+      "setbackground": "在 {0} 生成背景物件 {1} 失敗:{2}",
+      "item": {
+        "nullorempty": "物品不能為空或空值"
+      },
+      "background": {
+        "nullorempty": "背景物件ID不能為空或空值"
+      }
+    },
+    "player": {
+    },
+    "config": {
+      "switchtype": "已將 {0} 設置為 {1}!",
+      "change": {
+        "isnullorempty": "無法獲取程式集位置!",
+        "filenotfoundexception": "找不到配置文件 {0}"
+      }
+    },
+    "utils": {
+      "checkargumentcount": "預期至少 {0} 個參數 {1},但得到了 {2} 個",
+      "parse": {
+        "float": {
+          "invalid": "\"{0}\" 不是有效的浮點數值!(2, 0.7, 14.1 等)"
+        },
+        "int": {
+          "invalid": "\"{0}\" 不是有效的整數值!"
+        }
+      },
+      "string": {
+        "nullorempty": "輸入字串不能為空或空值"
+      }
+    }
   }
 }

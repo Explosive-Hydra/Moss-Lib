@@ -3,26 +3,54 @@
     "welcome": "Welcome!"
   },
   "command": {
-    "mosslib": {
-      "testhello": {
-        "description": "Test Hello.",
-        "text": "Hello World! by Moss Lib! {0}!"
-      },
-      "undeadmode": {
-        "description": "Toggles Undead mode.",
-        "text": "Undead mode"
-      }
+    "testhello": {
+      "description": "Test Hello.",
+      "text": "Hello World! by Moss Lib! {0}!"
+    },
+    "undeadmode": {
+      "description": "Toggles Undead mode.",
+      "text": "Undead mode"
     }
   },
-  "tools": {
-    "changeconfig": {
-      "isnullorempty": "Unable to get assembly location!",
-      "filenotfoundexception": "Configuration file \"{0}\" not found"
+  "tool": {
+    "console": {
+      "nullorempty": "Command cannot be null or empty",
+      "notinitialized": "ConsoleScript not initialized"
     },
-    "checkargumentcount": "Expected at least {0} argument {1}, but got {2}.",
-    "checkforworld": "No world is loaded. Try starting a game?",
-    "setblock": "In {0} spawn block {1} failed：{2}",
-    "setitem": "In {0} spawn item {1} failed：{2}",
-    "switchtype": "{0} has been set to {1}!"
+    "world": {
+      "checkforworld": "No world is loaded. Try starting a game?",
+      "setblock": "Failed to spawn block {1} at {0}: {2}",
+      "setitem": "Failed to spawn item {1} at {0}: {2}",
+      "setbackground": "Failed to spawn background object {1} at {0}: {2}",
+      "item": {
+        "nullorempty": "Item cannot be null or empty"
+      },
+      "background": {
+        "nullorempty": "Background object ID cannot be null or empty"
+      }
+    },
+    "player": {
+    },
+    "config": {
+      "switchtype": "{0} has been set to {1}!",
+      "change": {
+        "isnullorempty": "Unable to get assembly location!",
+        "filenotfoundexception": "Configuration file \"{0}\" not found"
+      }
+    },
+    "utils": {
+      "checkargumentcount": "Expected at least {0} argument {1}, but got {2}.",
+      "parse": {
+        "float": {
+          "invalid": "\"{0}\" is not a valid float value! (2, 0.7, 14.1, etc)"
+        },
+        "int": {
+          "invalid": "\"{0}\" is not a valid integer value!"
+        }
+      },
+      "string": {
+        "nullorempty": "Input string cannot be null or empty"
+      }
+    }
   }
 }

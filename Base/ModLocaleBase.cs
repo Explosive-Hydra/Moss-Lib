@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Newtonsoft.Json;
@@ -20,11 +22,11 @@ public abstract class ModLocaleBase
     private JObject _currentLang = new();
     private JObject _englishLang = new();
     
-    protected void Initialize(ManualLogSource logger, string pluginGuid, string pluginName, System.Reflection.Assembly pluginAssembly, Harmony harmonyInstance = null)
+    protected void Initialize(ManualLogSource logger, System.Reflection.Assembly pluginAssembly, Harmony harmonyInstance = null)
     {
         if (_isInitialized)
         {
-            logger.LogWarning($"ModLocaleBase for {pluginName} has already been initialized");
+            logger.LogWarning($"ModLocaleBase has already been initialized");
             return;
         }
 
@@ -34,6 +36,10 @@ public abstract class ModLocaleBase
             
             _log = logger;
             _pluginAssembly = pluginAssembly;
+            
+            var pluginAttribute = (BepInPlugin)Attribute.GetCustomAttribute(pluginAssembly, typeof(BepInPlugin));
+            var pluginGuid = pluginAttribute?.GUID ?? "unknown.plugin";
+            var pluginName = pluginAttribute?.Name ?? "Unknown Plugin";
             
             var harmony = harmonyInstance ?? new Harmony($"{pluginGuid}.modlocale");
             harmony.PatchAll(GetType());
@@ -78,7 +84,7 @@ public abstract class ModLocaleBase
         {
             _log?.LogError($"Language file JSON format error: {ex.Message}");
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             _log?.LogError($"Error occurred while loading language files: {ex.Message}");
         }
@@ -173,36 +179,6 @@ public abstract class ModLocaleBase
         }
     }
 
-    protected string GetStringFormatted(string key, int arg)
-    {
-        return GetStringFormatted(key, (object)arg);
-    }
-
-    protected string GetStringFormatted(string key, float arg)
-    {
-        return GetStringFormatted(key, (object)arg);
-    }
-
-    protected string GetStringFormatted(string key, int arg1, int arg2)
-    {
-        return GetStringFormatted(key, arg1, (object)arg2);
-    }
-
-    protected string GetStringFormatted(string key, float arg1, float arg2)
-    {
-        return GetStringFormatted(key, arg1, (object)arg2);
-    }
-
-    protected string GetStringFormatted(string key, int arg1, float arg2)
-    {
-        return GetStringFormatted(key, arg1, (object)arg2);
-    }
-
-    protected string GetStringFormatted(string key, float arg1, int arg2)
-    {
-        return GetStringFormatted(key, arg1, (object)arg2);
-    }
-    
     private static JToken GetJsonValue(JObject jsonObject, string path)
     {
         if (jsonObject == null || string.IsNullOrEmpty(path))

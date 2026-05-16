@@ -1,4 +1,7 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Reflection;
+using BepInEx;
+using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
@@ -9,15 +12,14 @@ public abstract class ModCommandBase
     private static readonly object Lock = new();
     private ManualLogSource _log;
     private bool _isInitialized;
-    private System.Reflection.Assembly _pluginAssembly;
     
     private string _lastErr = "";
 
-    protected void Initialize(ManualLogSource logger, string pluginGuid, string pluginName, System.Reflection.Assembly pluginAssembly, Harmony harmonyInstance = null)
+    protected void Initialize(ManualLogSource logger, Assembly pluginAssembly, Harmony harmonyInstance = null)
     {
         if (_isInitialized)
         {
-            logger.LogWarning($"ModCommandBase for {pluginName} has already been initialized");
+            logger.LogWarning($"ModCommandBase has already been initialized");
             return;
         }
 
@@ -26,7 +28,9 @@ public abstract class ModCommandBase
             if (_isInitialized) return;
             
             _log = logger;
-            _pluginAssembly = pluginAssembly;
+            
+            var pluginAttribute = (BepInPlugin)Attribute.GetCustomAttribute(pluginAssembly, typeof(BepInPlugin));
+            var pluginGuid = pluginAttribute?.GUID ?? "unknown.plugin";
             
             var harmony = harmonyInstance ?? new Harmony($"{pluginGuid}.modcommand");
             harmony.PatchAll(GetType());
@@ -89,6 +93,4 @@ public abstract class ModCommandBase
     
     // 提供受保护的方法供子类使用
     protected ManualLogSource Logger => _log;
-    
-    protected System.Reflection.Assembly PluginAssembly => _pluginAssembly;
 }

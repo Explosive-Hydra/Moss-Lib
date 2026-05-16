@@ -1,0 +1,61 @@
+﻿using System;
+using BepInEx.Logging;
+using HarmonyLib;
+using UnityEngine;
+
+namespace MossLib.Tool;
+
+[HarmonyPatch(typeof(ConsoleScript))]
+public static class Log
+{
+    private static readonly ConsoleScript ConsoleScript = Console.ConsoleScript;
+
+    private static void EnsureConsoleInitialized()
+    {
+        if (ConsoleScript == null)
+            throw new InvalidOperationException("ConsoleScript not initialized. Make sure the game has started.");
+    }
+    
+    public static void UpdateLogScreen(ConsoleScript consoleScript)
+    {
+        if (consoleScript?.logText == null) return;
+        consoleScript.logText.text = string.Join("\n", consoleScript.logs);
+    }
+    
+    public static void LogConsole(string text)
+    {
+        if (ConsoleScript == null)
+            return;
+        
+        ConsoleScript.logs.Add($"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
+        if (ConsoleScript.logs.Count > 100)
+            ConsoleScript.logs.RemoveAt(0);
+        if (!ConsoleScript.active)
+            return;
+        UpdateLogScreen(ConsoleScript);
+    }
+
+    public static void Info(string text, ManualLogSource logger)
+    {
+        LogConsole(text);
+        logger.LogInfo(text);
+    }
+    
+    public static void Error(string text, ManualLogSource logger)
+    {
+        LogConsole($"[ERROR] {text}");
+        logger.LogError(text);
+    }
+    
+    public static void Warning(string text, ManualLogSource logger)
+    {
+        LogConsole($"[WARNING] {text}");
+        logger.LogWarning(text);
+    }
+    
+    public static void Cla(string text, ManualLogSource logger, bool important, float delay = 0f)
+    {
+        Info(text, logger);
+        Player.Alert(text, important, delay);
+    }
+}

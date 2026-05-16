@@ -1,18 +1,17 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using MossLib.Example;
-using UnityEngine;
 
 namespace MossLib;
 
-[BepInPlugin(Guid, Name, "1.1.0")]
+[BepInPlugin(Guid, Name, Version)]
 public class Plugin : BaseUnityPlugin
 {
     internal new static ManualLogSource Logger;
     public const string Guid = "blackmoss.mosslib";
     public const string Name = "Moss Lib";
+    public const string Version = "1.1.0";
     private readonly Harmony _harmony = new(Guid);
     public static Plugin Instance { get; private set; } = null!;
     
