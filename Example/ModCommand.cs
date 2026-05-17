@@ -1,51 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 using HarmonyLib;
 using MossLib.Base;
 using MossLib.Tool;
-using UnityEngine;
-using Console = MossLib.Tool.Console;
 
 namespace MossLib.Example;
 
 [HarmonyPatch(typeof(ConsoleScript))]
 public class ModCommand : ModCommandBase
 {
-    private const string LocaleKeyPre = "command.";
-    private static ManualLogSource _logger;
+    private const string LocaleKeyPre = "log.modcommand.";
+    private new static readonly ManualLogSource Logger = Plugin.Logger;
 
-    private static ModCommand Instance { get; set; } = new();
-
-    public static void Initialize(ManualLogSource logger)
-    {
-        if (Instance != null)
-            return;
-        Instance = new ModCommand();
-        _logger = logger;
-        Instance.Initialize(logger, Assembly.GetExecutingAssembly());
-    }
-    
     [HarmonyPatch("RegisterAllCommands")]
     [HarmonyPostfix]
-    public static void RegisterCustomCommands()
+    public static void RegisterCustomCommands(ConsoleScript __instance)
     {
         ConsoleScript.Commands.Add(new Command(
             "testhello",
-            ModLocale.GetFormat($"{LocaleKeyPre}testhello.description"), _ => Log.Cla(
-                ModLocale.GetFormat($"{LocaleKeyPre}testhello.text", $"{LocaleKeyPre}testhello.description"),
-                _logger, (bool) (UnityEngine.Object) Console.ConsoleScript), 
+            Locale("testhello.description"), _ => Log.Cla(
+                Locale("testhello.text", Locale("testhello.description")),
+                Logger,
+                __instance),
             null)
         );
     }
-    
 
-    [HarmonyPatch("Awake")] 
-    [HarmonyPostfix] 
-    public static void AddCustomLogCallback()
+    private static string Locale(string key, params object[] args)
     {
-        Application.logMessageReceived += Instance.ApplicationLogCallback;
+        return ModLocale.GetFormat($"command.{key}", args);
+    }
+
+    private static void Info(string key, params object[] args)
+    {
+        var message = ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
+        Log.Info(message, Logger);
+    }
+
+    private static void Error(string key, params object[] args)
+    {
+        var message = ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
+        Log.Error(message, Logger);
+    }
+
+    private static void Warning(string key, params object[] args)
+    {
+        var message = ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
+        Log.Warning(message, Logger);
     }
 }
-

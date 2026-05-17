@@ -1,7 +1,5 @@
 ﻿{
-  "log": {
-    "welcome": "欢迎!"
-  },
+  "welcome": "欢迎!",
   "command": {
     "testhello": {
       "description": "测试Hello",
@@ -30,6 +28,7 @@
       }
     },
     "player": {
+      "bodynull": "玩家身体对象为空"
     },
     "config": {
       "switchtype": "已将 {0} 设置为 {1}!",

@@ -1,7 +1,5 @@
 ﻿{
-  "log": {
-    "welcome": "Welcome!"
-  },
+  "welcome": "Welcome!",
   "command": {
     "testhello": {
       "description": "Test Hello.",
@@ -30,6 +28,7 @@
       }
     },
     "player": {
+      "bodynull": "Player body is null"
     },
     "config": {
       "switchtype": "{0} has been set to {1}!",

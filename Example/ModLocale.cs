@@ -37,7 +37,7 @@ public class ModLocale : ModLocaleBase
             return $"[{key}]";
         }
     }
-        
+
     public static string Get(string key)
     {
         if (_instance == null)

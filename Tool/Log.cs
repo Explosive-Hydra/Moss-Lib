@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
@@ -15,19 +16,20 @@ public static class Log
         if (ConsoleScript == null)
             throw new InvalidOperationException("ConsoleScript not initialized. Make sure the game has started.");
     }
-    
+
     public static void UpdateLogScreen(ConsoleScript consoleScript)
     {
         if (consoleScript?.logText == null) return;
         consoleScript.logText.text = string.Join("\n", consoleScript.logs);
     }
-    
-    public static void LogConsole(string text)
+
+    public static void LogToConsole(string text)
     {
         if (ConsoleScript == null)
             return;
-        
-        ConsoleScript.logs.Add($"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
+
+        ConsoleScript.logs.Add(
+            $"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
         if (ConsoleScript.logs.Count > 100)
             ConsoleScript.logs.RemoveAt(0);
         if (!ConsoleScript.active)
@@ -35,24 +37,41 @@ public static class Log
         UpdateLogScreen(ConsoleScript);
     }
 
+    public static void NewLine()
+    {
+        LogToConsole("");
+    }
+
+    public static void Divider(char divider = '-', int length = 27)
+    {
+        var list = new List<char>();
+        for (int i = 0; i < length; i++)
+        {
+            list.Add(divider);
+        }
+
+        var message = new string(list.ToArray());
+        LogToConsole(message);
+    }
+
     public static void Info(string text, ManualLogSource logger)
     {
-        LogConsole(text);
+        LogToConsole(text);
         logger.LogInfo(text);
     }
-    
+
     public static void Error(string text, ManualLogSource logger)
     {
-        LogConsole($"[ERROR] {text}");
+        LogToConsole($"[ERROR] {text}");
         logger.LogError(text);
     }
-    
+
     public static void Warning(string text, ManualLogSource logger)
     {
-        LogConsole($"[WARNING] {text}");
+        LogToConsole($"[WARNING] {text}");
         logger.LogWarning(text);
     }
-    
+
     public static void Cla(string text, ManualLogSource logger, bool important, float delay = 0f)
     {
         Info(text, logger);
