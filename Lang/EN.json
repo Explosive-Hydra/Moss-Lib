@@ -4,10 +4,6 @@
     "testhello": {
       "description": "Test Hello.",
       "text": "Hello World! by Moss Lib! {0}!"
-    },
-    "undeadmode": {
-      "description": "Toggles Undead mode.",
-      "text": "Undead mode"
     }
   },
   "tool": {

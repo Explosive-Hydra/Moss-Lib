@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
     <Product>Moss-Lib</Product>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
-			https://api.nuget.org/v3/index.json;
-			https://nuget.bepinex.dev/v3/index.json;
-			https://nuget.samboy.dev/v3/index.json
-		</RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>MossLib</RootNamespace>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <PackageProjectUrl>https://github.com/Black-Moss/BlackMossTemplate</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Black-Moss/BlackMossTemplate</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Black-Moss/Moss-Lib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Black-Moss/Moss-Lib</RepositoryUrl>
     <PackageId>MossLib</PackageId>
-    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
