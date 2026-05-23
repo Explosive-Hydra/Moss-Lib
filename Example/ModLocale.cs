@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using BepInEx.Logging;
 using MossLib.Base;
-using System.Reflection;
 using MossLib.Tool;
 
 namespace MossLib.Example;
@@ -9,12 +9,13 @@ namespace MossLib.Example;
 public class ModLocale : ModLocaleBase
 {
     private static ModLocale _instance;
-    private static readonly ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource _logger;
 
     public static void Initialize(ManualLogSource logger)
     {
         if (_instance != null)
             return;
+        _logger = logger;
         _instance = new ModLocale();
         _instance.Initialize(logger, Assembly.GetExecutingAssembly());
     }
@@ -121,6 +122,6 @@ public class ModLocale : ModLocaleBase
 
     private static void Warning(string text)
     {
-        Log.Warning(text, Logger);
+        Log.Warning(text, _logger);
     }
 }

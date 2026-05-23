@@ -19,10 +19,14 @@ public static class LocaleGenerator
     public static void Register(ModLangGenBase generator, ManualLogSource logger)
     {
         if (generator == null || Generators.Contains(generator)) return;
+        
+        var assembly = System.Reflection.Assembly.GetCallingAssembly();
+        generator.Initialize(logger, assembly);
+        
         Generators.Add(generator);
         _logger = logger ?? _logger;
     }
-
+    
     public static void GenerateAll(string outputDirectory = null)
     {
         if (Generators.Count == 0)
@@ -32,13 +36,35 @@ public static class LocaleGenerator
         }
 
         Info("=== Starting localization file generation ===");
-            
+             
+        int successCount = 0;
+        int failureCount = 0;
+
         foreach (var generator in Generators)
         {
-            generator.Generate(outputDirectory);
+            if (generator == null)
+            {
+                Warning("[LocaleGenerator] Warning: Skipping null generator");
+                failureCount++;
+                continue;
+            }
+
+            try
+            {
+                var generatorName = generator.GetType().Name;
+                Info($"[LocaleGenerator] Generating language file for: {generatorName}");
+                generator.Generate(outputDirectory);
+                // successCount++;
+                // Info($"[LocaleGenerator] Successfully generated: {generatorName}");
+            }
+            catch (Exception ex)
+            {
+                // failureCount++;
+                // Error($"[LocaleGenerator] Failed to generate for {generator.GetType().Name}: {ex.Message}");
+            }
         }
 
-        Info($"=== Generation complete! Generated {Generators.Count} language file(s) ===");
+        Info($"=== Generation complete! Success: {successCount}, Failed: {failureCount}, Total: {Generators.Count} ===");
     }
 
     public static void GenerateSingle(string languageCode, string outputDirectory = null)
@@ -94,16 +120,16 @@ public static class LocaleGenerator
 
     private static void Info(string text)
     {
-        Log.Info(text, _logger);
+        _logger.LogInfo(text);
     }
     
     private static void Warning(string text)
     {
-        Log.Warning(text, _logger);
+        _logger.LogWarning(text);
     }
     
     private static void Error(string text)
     {
-        Log.Error(text, _logger);
+        _logger.LogError(text);
     }
 }

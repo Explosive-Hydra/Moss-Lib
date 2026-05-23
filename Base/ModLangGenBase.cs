@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using BepInEx.Logging;
+using HarmonyLib;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using MossLib.Tool;
 
 namespace MossLib.Base;
 
@@ -13,21 +13,18 @@ public abstract class ModLangGenBase
     protected abstract string LanguageCode { get; }
     private Dictionary<string, string> LocaleData { get; } = new();
     private const string LangDirectory = "Lang";
-    private static readonly ManualLogSource Logger = Plugin.Logger;
     private bool _isInitialized;
-    private readonly System.Reflection.Assembly _ownerAssembly;
+    private System.Reflection.Assembly _ownerAssembly = System.Reflection.Assembly.GetCallingAssembly();
+    private ManualLogSource _log;
 
-    protected ModLangGenBase()
-    {
-        _ownerAssembly = System.Reflection.Assembly.GetCallingAssembly();
-        Initialize();
-    }
-
-    private void Initialize()
+    internal void Initialize(ManualLogSource logger, System.Reflection.Assembly pluginAssembly, Harmony harmonyInstance = null)
     {
         if (_isInitialized)
             return;
 
+        _log = logger;
+        _ownerAssembly = pluginAssembly;
+        
         BuildLocaleData();
         _isInitialized = true;
     }
@@ -38,13 +35,13 @@ public abstract class ModLangGenBase
     {
         if (string.IsNullOrEmpty(key))
         {
-            Log.Warning($"[{LanguageCode}] Warning: Skipping empty key", Logger);
+            _log?.LogWarning($"[{LanguageCode}] Warning: Skipping empty key");
             return;
         }
 
         if (LocaleData.ContainsKey(key))
         {
-            Log.Warning($"[{LanguageCode}] Warning: Key '{key}' already exists and will be overwritten", Logger);
+            _log?.LogWarning($"[{LanguageCode}] Warning: Key '{key}' already exists and will be overwritten");
         }
 
         LocaleData[key] = value;
@@ -56,7 +53,7 @@ public abstract class ModLangGenBase
 
         if (LocaleData == null || LocaleData.Count == 0)
         {
-            Log.Warning($"[{LanguageCode}] Warning: No localization data to generate", Logger);
+            _log?.LogWarning($"[{LanguageCode}] Warning: No localization data to generate");
             return;
         }
 
@@ -78,11 +75,11 @@ public abstract class ModLangGenBase
             var jsonContent = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
                 
             File.WriteAllText(filePath, jsonContent + Environment.NewLine);
-            Log.Info($"[{LanguageCode}] ✓ Generated: {filePath} ({LocaleData.Count} entries)", Logger);
+            _log?.LogInfo($"[{LanguageCode}] ✓ Generated: {filePath} ({LocaleData.Count} entries)");
         }
         catch (Exception ex)
         {
-            Log.Error($"[{LanguageCode}] ✗ Generation failed: {ex.Message}", Logger);
+            _log?.LogError($"[{LanguageCode}] ✗ Generation failed: {ex.Message}");
         }
     }
 
@@ -122,7 +119,7 @@ public abstract class ModLangGenBase
     {
         if (!_isInitialized)
         {
-            Initialize();
+            throw new InvalidOperationException($"{GetType().Name} has not been initialized. Call Initialize() first.");
         }
     }
 
