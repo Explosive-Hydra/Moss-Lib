@@ -26,7 +26,7 @@ public class Plugin : BaseUnityPlugin
         ModLocale.Initialize(Logger);
         LocaleGenerator.Register(new EnLangGenerator(), Logger);
         LocaleGenerator.Register(new ZhCnLangGenerator(), Logger);
-        LocaleFileGenerator.GenerateCustom();
+        // LocaleFileGenerator.GenerateCustom();
         _harmony.PatchAll();
 
         Locale("welcome");

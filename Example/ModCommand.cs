@@ -8,7 +8,6 @@ namespace MossLib.Example;
 [HarmonyPatch(typeof(ConsoleScript))]
 public class ModCommand : ModCommandBase
 {
-    private const string LocaleKeyPre = "log.modcommand.";
     private new static readonly ManualLogSource Logger = Plugin.Logger;
 
     [HarmonyPatch("RegisterAllCommands")]
@@ -17,10 +16,8 @@ public class ModCommand : ModCommandBase
     {
         ConsoleScript.Commands.Add(new Command(
             "testhello",
-            Locale("testhello.description"), _ => Log.Cla(
-                Locale("testhello.text", Locale("testhello.description")),
-                Logger,
-                __instance),
+            Locale("testhello.description"), _ => 
+                Info("testhello.text", Locale("testhello.description")),
             null)
         );
     }
@@ -32,19 +29,7 @@ public class ModCommand : ModCommandBase
 
     private static void Info(string key, params object[] args)
     {
-        var message = ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
+        var message = Locale(key, args);
         Log.Info(message, Logger);
-    }
-
-    private static void Error(string key, params object[] args)
-    {
-        var message = ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
-        Log.Error(message, Logger);
-    }
-
-    private static void Warning(string key, params object[] args)
-    {
-        var message = ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
-        Log.Warning(message, Logger);
     }
 }
