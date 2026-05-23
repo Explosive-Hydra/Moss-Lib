@@ -8,16 +8,14 @@ namespace MossLib.Tool;
 
 public static class LocaleGenerator
 {
-    private static readonly List<ModLangGenBase> Generators = new();
+    private static readonly List<ModLangGenBase> Generators = [];
     private static ManualLogSource _logger;
 
     public static void Register(ModLangGenBase generator, ManualLogSource logger)
     {
-        if (generator != null && !Generators.Contains(generator))
-        {
-            Generators.Add(generator);
-            _logger = logger;
-        }
+        if (generator == null || Generators.Contains(generator)) return;
+        Generators.Add(generator);
+        _logger = logger;
     }
 
     public static void GenerateAll(string outputDirectory = null)

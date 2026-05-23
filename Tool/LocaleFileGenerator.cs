@@ -2,9 +2,11 @@
 
 public static class LocaleFileGenerator
 {
+    private static bool _initialized;
+
     public static void Main()
     {
-        LocaleGenerator.InitializeDefaults();
+        InitializeIfNeeded();
         LocaleGenerator.PrintInfo();
         System.Console.WriteLine();
         LocaleGenerator.GenerateAll();
@@ -12,25 +14,34 @@ public static class LocaleFileGenerator
 
     public static void GenerateEnglishOnly()
     {
-        LocaleGenerator.InitializeDefaults();
+        InitializeIfNeeded();
         LocaleGenerator.GenerateSingle("EN");
     }
 
     public static void GenerateSimplifiedChineseOnly()
     {
-        LocaleGenerator.InitializeDefaults();
+        InitializeIfNeeded();
         LocaleGenerator.GenerateSingle("zh-CN");
     }
 
     public static void GenerateTraditionalChineseOnly()
     {
-        LocaleGenerator.InitializeDefaults();
+        InitializeIfNeeded();
         LocaleGenerator.GenerateSingle("zh-TW");
     }
 
     public static void GenerateCustom()
     {
-        LocaleGenerator.InitializeDefaults();
+        InitializeIfNeeded();
         LocaleGenerator.GenerateAll();
+    }
+
+    private static void InitializeIfNeeded()
+    {
+        if (!_initialized)
+        {
+            LocaleGenerator.InitializeDefaults();
+            _initialized = true;
+        }
     }
 }

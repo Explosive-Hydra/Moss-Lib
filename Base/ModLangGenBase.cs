@@ -15,9 +15,11 @@ public abstract class ModLangGenBase
     private const string LangDirectory = "Lang";
     private static readonly ManualLogSource Logger = Plugin.Logger;
     private bool _isInitialized;
+    private readonly System.Reflection.Assembly _ownerAssembly;
 
     protected ModLangGenBase()
     {
+        _ownerAssembly = System.Reflection.Assembly.GetCallingAssembly();
         Initialize();
     }
 
@@ -60,7 +62,7 @@ public abstract class ModLangGenBase
 
         if (string.IsNullOrEmpty(outputDirectory))
         {
-            var pluginDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var pluginDirectory = Path.GetDirectoryName(_ownerAssembly.Location);
             outputDirectory = Path.Combine(pluginDirectory, LangDirectory);
         }
 

@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using MossLib.Base;
 using MossLib.Example;
+using MossLib.Example.Lang;
 using MossLib.Tool;
 
 namespace MossLib;
@@ -16,15 +17,18 @@ public class Plugin : BaseUnityPlugin
     public const string Version = "1.1.0";
     private readonly Harmony _harmony = new(Guid);
 
-    private const string LocaleKeyPre = "log.mosslib.";
+    private const string LocaleKeyPre = "mosslib.";
 
     public void Awake()
     {
         Logger = base.Logger;
 
         ModLocale.Initialize(Logger);
+        LocaleGenerator.Register(new EnLangGenerator(), Logger);
+        LocaleGenerator.Register(new ZhCnLangGenerator(), Logger);
+    
+        LocaleGenerator.GenerateAll();
         _harmony.PatchAll();
-        LocaleFileGenerator.Main();
 
         Locale("welcome");
     }
@@ -36,19 +40,19 @@ public class Plugin : BaseUnityPlugin
 
     private new static void Info(string key, params object[] args)
     {
-        var message = Locale($"{LocaleKeyPre}{key}", args);
+        var message = Locale($"log.{LocaleKeyPre}{key}", args);
         Log.Info(message, Logger);
     }
 
     private static void Error(string key, params object[] args)
     {
-        var message = Locale($"{LocaleKeyPre}{key}", args);
+        var message = Locale($"log.{LocaleKeyPre}{key}", args);
         Log.Error(message, Logger);
     }
 
     private static void Warning(string key, params object[] args)
     {
-        var message = Locale($"{LocaleKeyPre}{key}", args);
+        var message = Locale($"log.{LocaleKeyPre}{key}", args);
         Log.Warning(message, Logger);
     }
 }
