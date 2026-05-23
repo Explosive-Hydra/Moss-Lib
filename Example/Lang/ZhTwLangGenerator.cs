@@ -40,8 +40,8 @@ public class ZhTwLangGenerator : ModLangGenBase
 
         // Tool - Utils
         Add("tool.utils.checkargumentcount", "預期至少 {0} 個參數 {1},但得到了 {2} 個");
-        Add("tool.utils.parse.float.invalid", "\"{0}\" 不是有效的浮點數值!(2, 0.7, 14.1 等)");
-        Add("tool.utils.parse.int.invalid", "\"{0}\" 不是有效的整數值!");
+        Add("tool.utils.parse.float.invalid", "'{0}' 不是有效的浮點數值!(2, 0.7, 14.1 等)");
+        Add("tool.utils.parse.int.invalid", "'{0}' 不是有效的整數值!");
         Add("tool.utils.string.nullorempty", "輸入字串不能為空或空值");
     }
 }

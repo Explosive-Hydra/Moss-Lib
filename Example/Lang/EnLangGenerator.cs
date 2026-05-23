@@ -35,12 +35,12 @@ public class EnLangGenerator : ModLangGenBase
         // Tool - Config
         Add("tool.config.switchtype", "{0} has been set to {1}!");
         Add("tool.config.change.isnullorempty", "Unable to get assembly location!");
-        Add("tool.config.change.filenotfoundexception", "Configuration file \"{0}\" not found");
+        Add("tool.config.change.filenotfoundexception", "Configuration file '{0}' not found");
 
         // Tool - Utils
         Add("tool.utils.checkargumentcount", "Expected at least {0} argument {1}, but got {2}.");
-        Add("tool.utils.parse.float.invalid", "\"{0}\" is not a valid float value! (2, 0.7, 14.1, etc)");
-        Add("tool.utils.parse.int.invalid", "\"{0}\" is not a valid integer value!");
+        Add("tool.utils.parse.float.invalid", "'{0}' is not a valid float value! (2, 0.7, 14.1, etc)");
+        Add("tool.utils.parse.int.invalid", "'{0}' is not a valid integer value!");
         Add("tool.utils.string.nullorempty", "Input string cannot be null or empty");
     }
 }

@@ -39,8 +39,8 @@ public class ZhCnLangGenerator : ModLangGenBase
 
         // Tool - Utils
         Add("tool.utils.checkargumentcount", "预期至少 {0} 个参数 {1},但得到了 {2} 个");
-        Add("tool.utils.parse.float.invalid", "\"{0}\" 不是有效的浮点数值!(2, 0.7, 14.1 等)");
-        Add("tool.utils.parse.int.invalid", "\"{0}\" 不是有效的整数值!");
+        Add("tool.utils.parse.float.invalid", "'{0}' 不是有效的浮点数值!(2, 0.7, 14.1 等)");
+        Add("tool.utils.parse.int.invalid", "'{0}' 不是有效的整数值!");
         Add("tool.utils.string.nullorempty", "输入字符串不能为空或空值");
     }
 }
