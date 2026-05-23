@@ -38,10 +38,8 @@ public static class LocaleFileGenerator
 
     private static void InitializeIfNeeded()
     {
-        if (!_initialized)
-        {
-            LocaleGenerator.InitializeDefaults();
-            _initialized = true;
-        }
+        if (_initialized) return;
+        LocaleGenerator.InitializeDefaults();
+        _initialized = true;
     }
 }
