@@ -24,10 +24,11 @@ public class Plugin : BaseUnityPlugin
         Logger = base.Logger;
 
         ModLocale.Initialize(Logger);
-        LocaleGenerator.Register(new EnLangGenerator(), Logger);
-        LocaleGenerator.Register(new ZhCnLangGenerator(), Logger);
-        // LocaleFileGenerator.GenerateCustom();
         _harmony.PatchAll();
+        
+        LocaleGenerator.SetLogger(Logger);
+        LocaleGenerator.InitializeDefaults();
+        LocaleGenerator.GenerateAll();
 
         Locale("welcome");
     }

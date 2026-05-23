@@ -11,11 +11,16 @@ public static class LocaleGenerator
     private static readonly List<ModLangGenBase> Generators = [];
     private static ManualLogSource _logger;
 
+    public static void SetLogger(ManualLogSource logger)
+    {
+        _logger = logger;
+    }
+
     public static void Register(ModLangGenBase generator, ManualLogSource logger)
     {
         if (generator == null || Generators.Contains(generator)) return;
         Generators.Add(generator);
-        _logger = logger;
+        _logger = logger ?? _logger;
     }
 
     public static void GenerateAll(string outputDirectory = null)
@@ -38,7 +43,8 @@ public static class LocaleGenerator
 
     public static void GenerateSingle(string languageCode, string outputDirectory = null)
     {
-        var generator = Generators.Find(g => g.GetType().Name.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
+        var generator = Generators.Find(g =>
+            g.GetType().Name.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
             
         if (generator == null)
         { 
@@ -66,7 +72,7 @@ public static class LocaleGenerator
             var type = generator.GetType().Name;
             var code = GetPrivateProperty(generator, "LanguageCode");
             var count = generator.Count;
-            Info($"  {type}: Language Code={code}, Entries={count}");
+            Info($"  {type}: Language Code: {code}, Entries: {count}");
         }
     }
 
