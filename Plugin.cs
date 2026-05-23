@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using MossLib.Base;
 using MossLib.Example;
 using MossLib.Tool;
 
@@ -9,7 +10,7 @@ namespace MossLib;
 [BepInPlugin(Guid, Name, Version)]
 public class Plugin : BaseUnityPlugin
 {
-    internal new static ManualLogSource Logger;
+    public new static ManualLogSource Logger;
     public const string Guid = "blackmoss.mosslib";
     public const string Name = "Moss Lib";
     public const string Version = "1.1.0";
@@ -23,6 +24,7 @@ public class Plugin : BaseUnityPlugin
 
         ModLocale.Initialize(Logger);
         _harmony.PatchAll();
+        LocaleFileGenerator.Main();
 
         Locale("welcome");
     }

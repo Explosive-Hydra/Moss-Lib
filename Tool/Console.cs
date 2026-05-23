@@ -5,7 +5,7 @@ namespace MossLib.Tool;
 
 public static class Console
 {
-    internal static readonly ConsoleScript ConsoleScript = ConsoleScript.instance;
+    public static readonly ConsoleScript ConsoleScript = ConsoleScript.instance;
     private const string LocaleKeyPre = "tool.console.";
 
     public static void RunCommand(string command)

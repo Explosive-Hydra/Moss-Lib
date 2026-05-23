@@ -17,12 +17,6 @@ public static class Log
             throw new InvalidOperationException("ConsoleScript not initialized. Make sure the game has started.");
     }
 
-    public static void UpdateLogScreen(ConsoleScript consoleScript)
-    {
-        if (consoleScript?.logText == null) return;
-        consoleScript.logText.text = string.Join("\n", consoleScript.logs);
-    }
-
     public static void LogToConsole(string text)
     {
         if (ConsoleScript == null)
@@ -35,6 +29,12 @@ public static class Log
         if (!ConsoleScript.active)
             return;
         UpdateLogScreen(ConsoleScript);
+    }
+    
+    public static void UpdateLogScreen(ConsoleScript consoleScript)
+    {
+        if (consoleScript?.logText == null) return;
+        consoleScript.logText.text = string.Join("\n", consoleScript.logs);
     }
 
     public static void NewLine()
