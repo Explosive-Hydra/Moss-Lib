@@ -44,7 +44,7 @@
       <HintPath>F:\CasualtiesUnknownDemo\CasualtiesUnknown_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Custom Structures">
-      <HintPath>..\..\..\Downloads\CustomStructures\Custom Structures.dll</HintPath>
+      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\CustomStructures\Custom Structures.dll</HintPath>
     </Reference>
     <Reference Include="KrokoshaCasualtiesMP">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\KrokMP\KrokoshaCasualtiesMP.dll</HintPath>
