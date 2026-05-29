@@ -21,14 +21,16 @@ public class ZhTwLangGenerator : ModLangGenBase
 
         // Tool - World
         Add("tool.world.checkforworld", "沒有加載任何世界。要不試試開始遊戲?");
-        Add("tool.world.setblock", "在 {0} 生成方塊 {1} 失敗:{2}");
-        Add("tool.world.setitem", "在 {0} 生成物品 {1} 失敗:{2}");
-        Add("tool.world.setbackground", "在 {0} 生成背景物件 {1} 失敗:{2}");
-        Add("tool.world.item.nullorempty", "物品不能為空或空值");
-        Add("tool.world.background.nullorempty", "背景物件ID不能為空或空值");
+        Add("tool.world.placeblock", "在 {0} 生成方塊 {1} 失敗:{2}");
+        Add("tool.world.placeitem", "在 {0} 生成物品 {1} 失敗:{2}");
+        Add("tool.world.placeitem.nullorempty", "物品不能為空或空值");  
+        Add("tool.world.trygetsprite", "未找到背景精靈: {0}");
 
         // Tool - Player
         Add("tool.player.bodynull", "玩家身體物件為空");
+        Add("tool.player.item.nullorempty", "物品標識符不能為空或空白");
+        Add("tool.player.loaditem.fail", "加載或實例化物品資源失敗: '{0}'");
+        Add("tool.player.loaditem.missingcomponent", "資源 '{0}' 已加載但缺少所需的 Item 組件");
 
         // Tool - Multiplayer
         Add("tool.multiplayer.playername.nullorempty", "玩家名稱不能為空或空值");

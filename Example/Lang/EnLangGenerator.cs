@@ -20,14 +20,17 @@ public class EnLangGenerator : ModLangGenBase
 
         // Tool - World
         Add("tool.world.checkforworld", "No world is loaded. Try starting a game?");
-        Add("tool.world.setblock", "Failed to spawn block {1} at {0}: {2}");
-        Add("tool.world.setitem", "Failed to spawn item {1} at {0}: {2}");
-        Add("tool.world.setbackground", "Failed to spawn background object {1} at {0}: {2}");
-        Add("tool.world.item.nullorempty", "Item cannot be null or empty");
-        Add("tool.world.background.nullorempty", "Background object ID cannot be null or empty");
+        Add("tool.world.placeblock", "Failed to spawn block {1} at {0}: {2}");
+        Add("tool.world.placeitem", "Failed to spawn item {1} at {0}: {2}");
+        Add("tool.world.placeitem.nullorempty", "Item cannot be null or empty");   
+        Add("tool.world.trygetsprite", "Background sprite not found: {0}");
+
 
         // Tool - Player
         Add("tool.player.bodynull", "Player body is null");
+        Add("tool.player.item.nullorempty", "Item identifier cannot be null or whitespace");
+        Add("tool.player.loaditem.fail", "Failed to load or instantiate item resource: '{0}'");
+        Add("tool.player.loaditem.missingcomponent", "Resource '{0}' loaded but missing required Item component");
 
         // Tool - Multiplayer
         Add("tool.multiplayer.playername.nullorempty", "Player name cannot be null or empty");

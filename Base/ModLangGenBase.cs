@@ -70,12 +70,57 @@ public abstract class ModLangGenBase
 
         try
         {
-            var jsonObject = BuildNestedJson();
             var filePath = Path.Combine(outputDirectory, $"{LanguageCode}.json");
-            var jsonContent = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
-                
+
+            JObject existingJson = null;
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var existingContent = File.ReadAllText(filePath);
+                    existingJson = JObject.Parse(existingContent);
+                }
+                catch (Exception ex)
+                {
+                    _log?.LogWarning($"[{LanguageCode}] Failed to parse existing file, will regenerate: {ex.Message}");
+                }
+            }
+
+            JObject resultJson;
+            int newEntries = 0;
+
+            if (existingJson != null)
+            {
+                var existingKeys = FlattenJson(existingJson);
+
+                foreach (var kvp in LocaleData)
+                {
+                    if (!existingKeys.ContainsKey(kvp.Key))
+                    {
+                        SetNestedValue(existingJson, kvp.Key, kvp.Value);
+                        newEntries++;
+                    }
+                }
+
+                resultJson = existingJson;
+            }
+            else
+            {
+                resultJson = BuildNestedJson();
+                newEntries = LocaleData.Count;
+            }
+
+            var jsonContent = JsonConvert.SerializeObject(resultJson, Formatting.Indented);
             File.WriteAllText(filePath, jsonContent + Environment.NewLine);
-            _log?.LogInfo($"[{LanguageCode}] ✓ Generated: {filePath} ({LocaleData.Count} entries)");
+
+            if (newEntries > 0)
+            {
+                _log?.LogInfo($"[{LanguageCode}] ✓ Added {newEntries} new entries to: {filePath}");
+            }
+            else
+            {
+                _log?.LogInfo($"[{LanguageCode}] All entries already exist, no changes: {filePath}");
+            }
         }
         catch (Exception ex)
         {
@@ -113,6 +158,40 @@ public abstract class ModLangGenBase
         }
 
         current[keys[keys.Length - 1]] = value;
+    }
+
+    private static Dictionary<string, string> FlattenJson(JObject obj)
+    {
+        var result = new Dictionary<string, string>();
+        FlattenJsonRecursive(obj, "", result);
+        return result;
+    }
+
+    private static void FlattenJsonRecursive(JToken token, string prefix, Dictionary<string, string> result)
+    {
+        switch (token)
+        {
+            case JObject obj:
+            {
+                foreach (var prop in obj.Properties())
+                {
+                    var newPrefix = string.IsNullOrEmpty(prefix) ? prop.Name : $"{prefix}.{prop.Name}";
+                    FlattenJsonRecursive(prop.Value, newPrefix, result);
+                }
+                break;
+            }
+            case JArray array:
+            {
+                for (var i = 0; i < array.Count; i++)
+                {
+                    FlattenJsonRecursive(array[i], $"{prefix}[{i}]", result);
+                }
+                break;
+            }
+            case JValue value:
+                result[prefix] = value.ToString();
+                break;
+        }
     }
 
     private void EnsureInitialized()

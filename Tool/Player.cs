@@ -50,6 +50,37 @@ public static class Player
     {
         Tp(new Vector2(x, y));
     }
+
+    
+    public static void PickItem(string item, int slot, bool force = false)
+    {
+        World.CheckForWorld();
+
+        if (string.IsNullOrWhiteSpace(item))
+            throw new System.ArgumentException(
+                Locale("player.item.nullorempty"), nameof(item));
+
+        if (PlayerCamera.main.body == null)
+            throw new System.InvalidOperationException(Locale("player.bodynull"));
+
+        var body = PlayerCamera.main.body;
+        var position = body.transform.position;
+
+        var createdObject = Utils.Create(item, position, 0.0f);
+        if (createdObject == null)
+            throw new System.InvalidOperationException(
+                Locale("player.loaditem.fail", item));
+
+        var itemComponent = createdObject.GetComponent<Item>();
+        if (itemComponent == null)
+        {
+            Object.Destroy(createdObject);
+            throw new System.InvalidOperationException(
+                Locale("player.loaditem.missingcomponent", item));
+        }
+
+        body.PickUpItem(itemComponent, slot, force);
+    }
     
     private static string Locale(string key, params object[] args)
     {
