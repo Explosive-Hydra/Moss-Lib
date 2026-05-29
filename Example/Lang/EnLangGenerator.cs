@@ -46,5 +46,9 @@ public class EnLangGenerator : ModLangGenBase
         Add("tool.utils.parse.float.invalid", "'{0}' is not a valid float value! (2, 0.7, 14.1, etc)");
         Add("tool.utils.parse.int.invalid", "'{0}' is not a valid integer value!");
         Add("tool.utils.string.nullorempty", "Input string cannot be null or empty");
+
+        // Tool - UI Widgets
+        Add("tool.ui.widgets.text.null", "Text content cannot be null.");
+        Add("tool.ui.widgets.button.label.null", "Button label cannot be null.");
     }
 }

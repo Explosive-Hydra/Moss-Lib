@@ -30,7 +30,7 @@ public class ModCommand : ModCommandBase
         var result = "";
         for (int i = 0; i < text.Length; i++)
         {
-            result += Text.Size(text[i].ToString(), (i + 3) * 9);
+            result += RichText.Size(text[i].ToString(), (i + 3) * 9);
         }
 
         return result;

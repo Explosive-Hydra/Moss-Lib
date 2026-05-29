@@ -45,5 +45,9 @@ public class ZhCnLangGenerator : ModLangGenBase
         Add("tool.utils.parse.float.invalid", "'{0}' 不是有效的浮点数值!(2, 0.7, 14.1 等)");
         Add("tool.utils.parse.int.invalid", "'{0}' 不是有效的整数值!");
         Add("tool.utils.string.nullorempty", "输入字符串不能为空或空值");
+
+        // Tool - UI Widgets
+        Add("tool.ui.widgets.text.null", "文本内容不能为 null。");
+        Add("tool.ui.widgets.button.label.null", "按钮标签不能为 null。");
     }
 }

@@ -46,5 +46,9 @@ public class ZhTwLangGenerator : ModLangGenBase
         Add("tool.utils.parse.float.invalid", "'{0}' 不是有效的浮點數值!(2, 0.7, 14.1 等)");
         Add("tool.utils.parse.int.invalid", "'{0}' 不是有效的整數值!");
         Add("tool.utils.string.nullorempty", "輸入字串不能為空或空值");
+
+        // Tool - UI Widgets
+        Add("tool.ui.widgets.text.null", "文字內容不能為 null。");
+        Add("tool.ui.widgets.button.label.null", "按鈕標籤不能為 null。");
     }
 }

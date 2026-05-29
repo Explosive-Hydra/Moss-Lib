@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MossLib.Tool;
 
-public static class Text
+public static class RichText
 {
     public static string Color(string text, string color)
     {
