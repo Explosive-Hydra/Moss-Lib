@@ -47,8 +47,10 @@ public class EnLangGenerator : ModLangGenBase
         Add("tool.utils.parse.int.invalid", "'{0}' is not a valid integer value!");
         Add("tool.utils.string.nullorempty", "Input string cannot be null or empty");
 
-        // Tool - UI Widgets
-        Add("tool.ui.widgets.text.null", "Text content cannot be null.");
-        Add("tool.ui.widgets.button.label.null", "Button label cannot be null.");
+        // // Tool - UI Widgets
+        // Add("tool.ui.widgets.text.null", "Text content cannot be null.");
+        // Add("tool.ui.widgets.button.label.null", "Button label cannot be null.");
+        // // Tool - UI Widgets - Logs
+        // Add("tool.ui.widgets.no_template", "No game button template found, falling back to manual build");
     }
 }

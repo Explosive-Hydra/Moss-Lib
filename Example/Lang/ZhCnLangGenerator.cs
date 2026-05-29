@@ -46,8 +46,10 @@ public class ZhCnLangGenerator : ModLangGenBase
         Add("tool.utils.parse.int.invalid", "'{0}' 不是有效的整数值!");
         Add("tool.utils.string.nullorempty", "输入字符串不能为空或空值");
 
-        // Tool - UI Widgets
-        Add("tool.ui.widgets.text.null", "文本内容不能为 null。");
-        Add("tool.ui.widgets.button.label.null", "按钮标签不能为 null。");
+        // // Tool - UI Widgets
+        // Add("tool.ui.widgets.text.null", "文本内容不能为 null。");
+        // Add("tool.ui.widgets.button.label.null", "按钮标签不能为 null。");
+        // // Tool - UI Widgets - Logs
+        // Add("tool.ui.widgets.no_template", "未找到游戏按钮模板，回退到手动构建");
     }
 }

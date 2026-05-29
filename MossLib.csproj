@@ -46,6 +46,9 @@
     <Reference Include="Custom Structures">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\CustomStructures\Custom Structures.dll</HintPath>
     </Reference>
+    <Reference Include="QoL Unknown">
+      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\QoL Unknown.dll</HintPath>
+    </Reference>
     <Reference Include="KrokoshaCasualtiesMP">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\KrokMP\KrokoshaCasualtiesMP.dll</HintPath>
     </Reference>
