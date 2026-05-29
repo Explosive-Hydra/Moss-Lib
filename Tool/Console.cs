@@ -1,21 +1,23 @@
-﻿using System;
-using MossLib.Example;
+﻿using MossLib.Example;
 
 namespace MossLib.Tool;
 
-public static class Console
+public static class GameConsole
 {
-    public static readonly ConsoleScript ConsoleScript = ConsoleScript.instance;
+    public static readonly ConsoleScript Instance = ConsoleScript.instance;
+
     private const string LocaleKeyPre = "tool.console.";
 
     public static void RunCommand(string command)
     {
         if (string.IsNullOrWhiteSpace(command))
-            throw new ArgumentException(ModLocale.GetFormat($"{LocaleKeyPre}nullorempty"), nameof(command));
+            throw new System.ArgumentException(
+                ModLocale.GetFormat($"{LocaleKeyPre}nullorempty"), nameof(command));
 
-        if (ConsoleScript == null)
-            throw new InvalidOperationException(ModLocale.GetFormat($"{LocaleKeyPre}notinitialized"));
+        if (Instance == null)
+            throw new System.InvalidOperationException(
+                ModLocale.GetFormat($"{LocaleKeyPre}notinitialized"));
 
-        ConsoleScript.instance.ExecuteCommand(command);
+        Instance.ExecuteCommand(command);
     }
 }

@@ -28,16 +28,17 @@ public class ZhCnLangGenerator : ModLangGenBase
         // Tool - Player
         Add("tool.player.bodynull", "玩家身体对象为空");
         Add("tool.player.item.nullorempty", "物品标识符不能为空或空白");
+        Add("tool.player.slot.outofrange", "物品栏索引超出范围。最大槽位数: {0}");
         Add("tool.player.loaditem.fail", "加载或实例化物品资源失败: '{0}'");
         Add("tool.player.loaditem.missingcomponent", "资源 '{0}' 已加载但缺少所需的 Item 组件");
 
         // Tool - Multiplayer
         Add("tool.multiplayer.playername.nullorempty", "玩家名称不能为空或空值");
+        Add("tool.multiplayer.teleport.success", "已传送: {0} 到 {1}");
+        Add("tool.multiplayer.teleport.fail", "传送失败: {0}");
 
         // Tool - Config
         Add("tool.config.switchtype", "已将 {0} 设置为 {1}!");
-        Add("tool.config.change.isnullorempty", "无法获取程序集位置!");
-        Add("tool.config.change.filenotfoundexception", "找不到配置文件 {0}");
 
         // Tool - Utils
         Add("tool.utils.checkargumentcount", "预期至少 {0} 个参数 {1},但得到了 {2} 个");

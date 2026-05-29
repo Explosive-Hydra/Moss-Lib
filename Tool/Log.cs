@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
@@ -9,12 +8,15 @@ namespace MossLib.Tool;
 [HarmonyPatch(typeof(ConsoleScript))]
 public static class Log
 {
-    private static readonly ConsoleScript ConsoleScript = Console.ConsoleScript;
+    public const int MaxLogCount = 100;
+
+    private static readonly ConsoleScript ConsoleScript = GameConsole.Instance;
 
     private static void EnsureConsoleInitialized()
     {
         if (ConsoleScript == null)
-            throw new InvalidOperationException("ConsoleScript not initialized. Make sure the game has started.");
+            throw new InvalidOperationException(
+                "ConsoleScript not initialized. Make sure the game has started.");
     }
 
     public static void LogToConsole(string text)
@@ -24,13 +26,13 @@ public static class Log
 
         ConsoleScript.logs.Add(
             $"[<alpha=#55>{TimeSpan.FromSeconds(Time.realtimeSinceStartup):mm\\:ss}<alpha=#FF>] {text}");
-        if (ConsoleScript.logs.Count > 100)
+        if (ConsoleScript.logs.Count > MaxLogCount)
             ConsoleScript.logs.RemoveAt(0);
         if (!ConsoleScript.active)
             return;
         UpdateLogScreen(ConsoleScript);
     }
-    
+
     public static void UpdateLogScreen(ConsoleScript consoleScript)
     {
         if (consoleScript?.logText == null) return;
@@ -44,13 +46,7 @@ public static class Log
 
     public static void Divider(char divider = '-', int length = 27)
     {
-        var list = new List<char>();
-        for (int i = 0; i < length; i++)
-        {
-            list.Add(divider);
-        }
-
-        var message = new string(list.ToArray());
+        var message = new string(divider, length);
         LogToConsole(message);
     }
 
@@ -58,6 +54,12 @@ public static class Log
     {
         LogToConsole(text);
         logger.LogInfo(text);
+    }
+
+    public static void Debug(string text, ManualLogSource logger)
+    {
+        LogToConsole($"[DEBUG] {text}");
+        logger.LogDebug(text);
     }
 
     public static void Error(string text, ManualLogSource logger)
@@ -72,9 +74,15 @@ public static class Log
         logger.LogWarning(text);
     }
 
-    public static void Cla(string text, ManualLogSource logger, bool important, float delay = 0f)
+    public static void Alert(string text, ManualLogSource logger, bool important, float delay = 0f)
     {
         Info(text, logger);
         Player.Alert(text, important, delay);
+    }
+
+    [Obsolete("Use Alert() instead")]
+    public static void Cla(string text, ManualLogSource logger, bool important, float delay = 0f)
+    {
+        Alert(text, logger, important, delay);
     }
 }

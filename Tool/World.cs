@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using MossLib.Example;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace MossLib.Tool;
 
@@ -16,6 +15,8 @@ public static class World
 
     private static readonly HashSet<string> MissingSpriteWarnings =
         new(StringComparer.OrdinalIgnoreCase);
+
+    private static Material _cachedBgMaterial;
 
     public static void PlaceBlock(int x, int y, ushort block)
     {
@@ -31,7 +32,7 @@ public static class World
         }
         catch (Exception ex)
         {
-            Error($"placeblock", vector2, block, ex);
+            Error("placeblock", vector2, block, ex);
         }
     }
 
@@ -45,7 +46,7 @@ public static class World
         CheckForWorld();
 
         if (string.IsNullOrWhiteSpace(item))
-            throw new ArgumentException(Locale($"placeitem.nullorempty"), nameof(item));
+            throw new ArgumentException(Locale("placeitem.nullorempty"), nameof(item));
 
         try
         {
@@ -53,7 +54,7 @@ public static class World
         }
         catch (Exception ex)
         {
-            Error($"placeitem", vector2, item, ex);
+            Error("placeitem", vector2, item, ex);
         }
     }
 
@@ -62,23 +63,22 @@ public static class World
         if (WorldGeneration.world == null)
             return;
 
-        if (!TryGetSprite(backgroundId, out Sprite sprite))
+        if (!TryGetSprite(backgroundId, out var sprite))
             return;
 
-        GameObject template = GetBgTemplate();
+        var template = GetBgTemplate();
         if (template == null)
             return;
 
-        Vector3 worldPos3 = WorldGeneration.world.BlockToWorldPos(pos);
-        GameObject go = UnityEngine.Object.Instantiate(template, worldPos3,
-            Quaternion.identity);
+        var worldPos3 = WorldGeneration.world.BlockToWorldPos(pos);
+        var go = UnityEngine.Object.Instantiate(template, worldPos3, Quaternion.identity);
         go.name = $"BgTile_{pos.x}_{pos.y}";
         go.SetActive(true);
 
         Transform parent = WorldGeneration.world.worldGrid?.transform;
         if (parent == null)
         {
-            Tilemap chunk = WorldGeneration.world.GetClosestChunk(pos);
+            var chunk = WorldGeneration.world.GetClosestChunk(pos);
             if (chunk != null)
                 parent = chunk.transform;
         }
@@ -86,50 +86,59 @@ public static class World
         if (parent != null)
             go.transform.SetParent(parent, true);
 
-        MeshFilter mf = go.GetComponent<MeshFilter>();
+        var mf = go.GetComponent<MeshFilter>();
         mf.mesh = CreateTileMesh(pos);
 
-        MeshRenderer mr = go.GetComponent<MeshRenderer>();
-        Material mat = new(WorldGeneration.world.defaultMat)
-        {
-            mainTexture = sprite.texture,
-            mainTextureScale = Vector2.one,
-            mainTextureOffset = Vector2.one
-        };
-        mr.material = mat;
+        var mr = go.GetComponent<MeshRenderer>();
+        mr.material = GetOrCreateBgMaterial(sprite);
         mr.sortingOrder = -5000;
-        mr.material.color = Color.gray;
+    }
+
+    private static Material GetOrCreateBgMaterial(Sprite sprite)
+    {
+        if (_cachedBgMaterial == null)
+        {
+            _cachedBgMaterial = new Material(WorldGeneration.world.defaultMat)
+            {
+                mainTextureScale = Vector2.one,
+                mainTextureOffset = Vector2.one
+            };
+            _cachedBgMaterial.color = Color.gray;
+        }
+
+        _cachedBgMaterial.mainTexture = sprite.texture;
+        return _cachedBgMaterial;
     }
 
     public static Mesh CreateTileMesh(Vector2Int pos)
     {
         const int tileCount = 4;
-        int u = pos.x % tileCount;
-        int v = pos.y % tileCount;
+        var u = pos.x % tileCount;
+        var v = pos.y % tileCount;
         if (u < 0) u += tileCount;
         if (v < 0) v += tileCount;
 
-        float step = 1f / tileCount;
-        float u0 = u * step;
-        float u1 = (u + 1) * step;
-        float v0 = v * step;
-        float v1 = (v + 1) * step;
+        var step = 1f / tileCount;
+        var u0 = u * step;
+        var u1 = (u + 1) * step;
+        var v0 = v * step;
+        var v1 = (v + 1) * step;
 
-        Mesh mesh = new()
+        var mesh = new Mesh
         {
             vertices =
             [
-                new(-0.5f, -0.5f, 0),
-                new(0.5f, -0.5f, 0),
-                new(-0.5f, 0.5f, 0),
-                new(0.5f, 0.5f, 0)
+                new Vector3(-0.5f, -0.5f, 0),
+                new Vector3(0.5f, -0.5f, 0),
+                new Vector3(-0.5f, 0.5f, 0),
+                new Vector3(0.5f, 0.5f, 0)
             ],
             uv =
             [
-                new(u0, v0),
-                new(u1, v0),
-                new(u0, v1),
-                new(u1, v1)
+                new Vector2(u0, v0),
+                new Vector2(u1, v0),
+                new Vector2(u0, v1),
+                new Vector2(u1, v1)
             ],
             triangles = [0, 2, 1, 2, 3, 1]
         };
@@ -152,8 +161,7 @@ public static class World
 
     private static bool TryGetSprite(string backgroundId, out Sprite sprite)
     {
-        if (SpriteCache.TryGetValue(backgroundId, out sprite)
-            && sprite != null)
+        if (SpriteCache.TryGetValue(backgroundId, out sprite) && sprite != null)
             return true;
 
         sprite = Resources.Load<Sprite>(backgroundId);
@@ -171,7 +179,25 @@ public static class World
     public static void CheckForWorld()
     {
         if (PlayerCamera.main == null)
-            throw new Exception(Locale("checkforworld"));
+            throw new InvalidOperationException(Locale("checkforworld"));
+    }
+
+    public static void ClearCache()
+    {
+        SpriteCache.Clear();
+        MissingSpriteWarnings.Clear();
+
+        if (_cachedBgTemplate != null)
+        {
+            UnityEngine.Object.Destroy(_cachedBgTemplate);
+            _cachedBgTemplate = null;
+        }
+
+        if (_cachedBgMaterial != null)
+        {
+            UnityEngine.Object.Destroy(_cachedBgMaterial);
+            _cachedBgMaterial = null;
+        }
     }
 
     private static void Warning(string key, params object[] args)
@@ -188,6 +214,6 @@ public static class World
 
     private static string Locale(string key, params object[] args)
     {
-        return ModLocale.GetFormat($"tool.{LocaleKeyPre}.{key}", args);
+        return ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
     }
 }

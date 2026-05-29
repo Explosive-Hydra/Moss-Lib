@@ -29,16 +29,17 @@ public class EnLangGenerator : ModLangGenBase
         // Tool - Player
         Add("tool.player.bodynull", "Player body is null");
         Add("tool.player.item.nullorempty", "Item identifier cannot be null or whitespace");
+        Add("tool.player.slot.outofrange", "Slot index out of range. Maximum slots: {0}");
         Add("tool.player.loaditem.fail", "Failed to load or instantiate item resource: '{0}'");
         Add("tool.player.loaditem.missingcomponent", "Resource '{0}' loaded but missing required Item component");
 
         // Tool - Multiplayer
         Add("tool.multiplayer.playername.nullorempty", "Player name cannot be null or empty");
+        Add("tool.multiplayer.teleport.success", "Teleported: {0} to {1}");
+        Add("tool.multiplayer.teleport.fail", "Failed to teleport: {0}");
 
         // Tool - Config
         Add("tool.config.switchtype", "{0} has been set to {1}!");
-        Add("tool.config.change.isnullorempty", "Unable to get assembly location!");
-        Add("tool.config.change.filenotfoundexception", "Configuration file '{0}' not found");
 
         // Tool - Utils
         Add("tool.utils.checkargumentcount", "Expected at least {0} argument {1}, but got {2}.");

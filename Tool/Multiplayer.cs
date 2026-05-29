@@ -8,6 +8,8 @@ namespace MossLib.Tool;
 [BepInDependency("KrokoshaCasualtiesMP", BepInDependency.DependencyFlags.SoftDependency)]
 public static class Multiplayer
 {
+    private const string LocaleKeyPre = "tool.multiplayer.";
+
     private static Type _krokoshaType;
     private static bool _initialized;
 
@@ -15,7 +17,7 @@ public static class Multiplayer
     {
         if (_initialized)
             return;
-        
+
         _krokoshaType = Type.GetType("KrokoshaScavMultiplayer, KrokoshaCasualtiesMP");
         _initialized = true;
     }
@@ -27,7 +29,7 @@ public static class Multiplayer
             Initialize();
             if (_krokoshaType == null)
                 return false;
-            
+
             var prop = _krokoshaType.GetProperty("network_system_is_running");
             return prop != null && (bool)prop.GetValue(null, null);
         }
@@ -40,7 +42,7 @@ public static class Multiplayer
             Initialize();
             if (_krokoshaType == null)
                 return false;
-            
+
             var prop = _krokoshaType.GetProperty("is_client");
             return prop != null && (bool)prop.GetValue(null, null);
         }
@@ -57,12 +59,12 @@ public static class Multiplayer
         }
 
         if (PlayerCamera.main.body == null)
-            throw new InvalidOperationException(Locale("player.bodynull"));
+            throw new InvalidOperationException(ModLocale.GetFormat("tool.player.bodynull"));
 
         PlayerCamera.main.body.transform.position = vector2;
         PlayerCamera.main.transform.position = vector2;
     }
-    
+
     public static void Tp(float x, float y)
     {
         Tp(new Vector2(x, y));
@@ -73,7 +75,7 @@ public static class Multiplayer
         World.CheckForWorld();
 
         if (string.IsNullOrWhiteSpace(playerName))
-            throw new ArgumentException(Locale("multiplayer.playername.nullorempty"), nameof(playerName));
+            throw new ArgumentException(Locale("playername.nullorempty"), nameof(playerName));
 
         if (!IsNetworkRunning)
         {
@@ -82,18 +84,15 @@ public static class Multiplayer
         }
 
         if (PlayerCamera.main.body == null)
-            throw new InvalidOperationException(Locale("player.bodynull"));
+            throw new InvalidOperationException(ModLocale.GetFormat("tool.player.bodynull"));
 
         bool success = false;
         string actualName = playerName;
 
         if (playerName == "@a")
         {
-            PerformActionOnAllPlayers(plr =>
-            {
-                TeleportPlayer(plr, vector2);
-                success = true;
-            });
+            PerformActionOnAllPlayers(plr => { TeleportPlayer(plr, vector2); });
+            success = true;
         }
         else
         {
@@ -104,7 +103,9 @@ public static class Multiplayer
             });
         }
 
-        LogToConsole(success ? $"Teleported: {actualName} to {vector2}" : $"Failed to teleport: {actualName}");
+        LogToConsole(success
+            ? Locale("teleport.success", actualName, vector2)
+            : Locale("teleport.fail", actualName));
     }
 
     public static void Tp(string playerName, float x, float y)
@@ -158,7 +159,7 @@ public static class Multiplayer
         {
             var bodyProp = player.GetType().GetProperty("playerbody");
             var body = bodyProp?.GetValue(player, null);
-            
+
             if (body != null)
             {
                 var bodyTransform = ((Component)body).transform;
@@ -180,7 +181,7 @@ public static class Multiplayer
             Log.Error($"Failed to teleport player: {ex.Message}", Plugin.Logger);
         }
     }
-    
+
     private static void ServerTeleportCharacter(object player, Vector2 position)
     {
         try
@@ -236,7 +237,7 @@ public static class Multiplayer
             if (method == null)
                 return;
 
-            var parameters = new object[] { "@a", (Action<object>)action, null, true };
+            var parameters = new object[] { "@a", action, null, true };
             method.Invoke(null, parameters);
         }
         catch (Exception ex)
@@ -245,7 +246,7 @@ public static class Multiplayer
         }
     }
 
-    private static string GetPlayerName(object player)
+    public static string GetPlayerName(object player)
     {
         if (player == null)
             return "Unknown";
@@ -278,6 +279,7 @@ public static class Multiplayer
         }
         catch
         {
+            // 忽略：游戏控制台不可用时回退到 BepInEx 日志
         }
 
         Plugin.Logger.LogInfo(message);
@@ -285,6 +287,6 @@ public static class Multiplayer
 
     private static string Locale(string key, params object[] args)
     {
-        return ModLocale.GetFormat(key, args);
+        return ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
     }
 }

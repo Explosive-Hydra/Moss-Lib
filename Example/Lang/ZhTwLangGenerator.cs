@@ -29,16 +29,17 @@ public class ZhTwLangGenerator : ModLangGenBase
         // Tool - Player
         Add("tool.player.bodynull", "玩家身體物件為空");
         Add("tool.player.item.nullorempty", "物品標識符不能為空或空白");
+        Add("tool.player.slot.outofrange", "物品欄索引超出範圍。最大槽位數: {0}");
         Add("tool.player.loaditem.fail", "加載或實例化物品資源失敗: '{0}'");
         Add("tool.player.loaditem.missingcomponent", "資源 '{0}' 已加載但缺少所需的 Item 組件");
 
         // Tool - Multiplayer
         Add("tool.multiplayer.playername.nullorempty", "玩家名稱不能為空或空值");
+        Add("tool.multiplayer.teleport.success", "已傳送: {0} 到 {1}");
+        Add("tool.multiplayer.teleport.fail", "傳送失敗: {0}");
 
         // Tool - Config
         Add("tool.config.switchtype", "已將 {0} 設置為 {1}!");
-        Add("tool.config.change.isnullorempty", "無法獲取程式集位置!");
-        Add("tool.config.change.filenotfoundexception", "找不到配置文件 {0}");
 
         // Tool - Utils
         Add("tool.utils.checkargumentcount", "預期至少 {0} 個參數 {1},但得到了 {2} 個");

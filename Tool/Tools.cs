@@ -17,8 +17,8 @@ public static class Tools
             throw new ArgumentNullException(nameof(args));
 
         if (args.Length <= desired)
-            throw new Exception(ModLocale.GetFormat($"{LocaleKeyPre}checkargumentcount", desired,
-                desired > 1 ? "s" : "", args.Length - 1));
+            throw new Exception(ModLocale.GetFormat($"{LocaleKeyPre}checkargumentcount",
+                desired, args.Length - 1));
     }
 
     public static float ParseFloat(string s)
@@ -27,8 +27,8 @@ public static class Tools
             throw new ArgumentException(ModLocale.GetFormat($"{LocaleKeyPre}string.nullorempty"), nameof(s));
 
         return !float.TryParse(
-            s, NumberStyles.Float
-               | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var result)
+            s, NumberStyles.Float | NumberStyles.AllowThousands,
+            CultureInfo.InvariantCulture, out var result)
             ? throw new FormatException(ModLocale.GetFormat($"{LocaleKeyPre}parse.float.invalid", s))
             : result;
     }

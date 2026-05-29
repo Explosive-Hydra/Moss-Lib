@@ -26,14 +26,15 @@ public static class Config
         Info($"{LogKeyPre}switchtype", configName, configEntry.Value);
     }
 
-    public static void SwitchType(ConfigEntry<bool> configEntry, string configName, ManualLogSource logger,
-        bool important)
+    public static void SwitchType(ConfigEntry<bool> configEntry, string configName,
+        ManualLogSource logger, bool important)
     {
         if (configEntry == null)
             throw new System.ArgumentNullException(nameof(configEntry));
 
         ChangeConfig(configEntry, !configEntry.Value);
-        Log.Cla(ModLocale.GetFormat($"{LogKeyPre}switchtype", configName, configEntry.Value), logger, important);
+        Log.Alert(ModLocale.GetFormat($"{LogKeyPre}switchtype", configName, configEntry.Value),
+            logger, important);
     }
 
     private static void Info(string key, params object[] args)
