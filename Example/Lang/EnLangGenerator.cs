@@ -14,6 +14,17 @@ public class EnLangGenerator : ModLangGenBase
         Add("command.testhello.description", "Test Hello.");
         Add("command.testhello.text", "Hello World! by Moss Lib! {0}!");
 
+        // Command - SpawnBlock
+        Add("command.spawnblock.description", "Spawns a block at the cursor position.");
+        Add("command.spawnblock.blockid", "The ID of the block to spawn.");
+        Add("command.spawnblock.invalid_blockid", "'{0}' is not a valid block ID.");
+        Add("command.spawnblock.success", "Spawned block {0}.");
+
+        // Command - ListBackground
+        Add("command.listbackground.description", "Lists all available background IDs.");
+        Add("command.listbackground.header", "Found {0} background(s):");
+        Add("command.listbackground.none", "No background resources found.");
+
         // Tool - Console
         Add("tool.console.nullorempty", "Command cannot be null or empty");
         Add("tool.console.notinitialized", "ConsoleScript not initialized");

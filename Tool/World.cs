@@ -61,6 +61,13 @@ public static class World
         }
     }
 
+    public static void PlaceBackground(Vector2 pos, string backgroundId)
+    {
+        var x = (int)pos.x;
+        var y = (int)pos.y;
+        PlaceBackground(new Vector2Int(x, y), backgroundId);
+    }
+
     public static void PlaceBackground(Vector2Int pos, string backgroundId)
     {
         if (WorldGeneration.world == null)
@@ -73,8 +80,8 @@ public static class World
         if (template == null)
             return;
 
-        var worldPos3 = WorldGeneration.world.BlockToWorldPos(pos);
-        var go = UnityEngine.Object.Instantiate(template, worldPos3, Quaternion.identity);
+        var worldPos2 = WorldGeneration.world.BlockToWorldPos(pos);
+        var go = UnityEngine.Object.Instantiate(template, worldPos2, Quaternion.identity);
         go.name = $"BgTile_{pos.x}_{pos.y}";
         go.SetActive(true);
 

@@ -1,7 +1,11 @@
-﻿using BepInEx.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BepInEx.Logging;
 using HarmonyLib;
 using MossLib.Base;
 using MossLib.Tool;
+using UnityEngine;
 
 namespace MossLib.Example;
 
@@ -16,10 +20,56 @@ public class ModCommand : ModCommandBase
     {
         ConsoleScript.Commands.Add(new Command(
             "testhello",
-            Locale("testhello.description"), _ =>
-                Info("testhello.text",
-                    TestHello()
-                ),
+            Locale("testhello.description"),
+            _ => Info("testhello.text", TestHello()),
+            null)
+        );
+
+        ConsoleScript.Commands.Add(new Command(
+            "spawnblock",
+            Locale("spawnblock.description"),
+            args =>
+            {
+                World.CheckForWorld();
+                Tools.CheckArgumentCount(args, 1);
+
+                if (!ushort.TryParse(args[1], out var blockId))
+                {
+                    Log.Error(Locale("spawnblock.invalid_blockid", args[1]), Logger);
+                    return;
+                }
+
+                World.PlaceBlock(Key.MouseWorldPosition(), blockId);
+                Log.Info(Locale("spawnblock.success", blockId), Logger);
+            },
+            new Dictionary<int, List<string>>
+            {
+                { 0, ["blockid"] }
+            },
+            ("blockid", Locale("spawnblock.blockid")))
+        );
+
+        ConsoleScript.Commands.Add(new Command(
+            "listbackground",
+            Locale("listbackground.description"),
+            _ =>
+            {
+                World.CheckForWorld();
+
+                var backgrounds = Resources.LoadAll<Sprite>("");
+                var backgroundList = (from bg in backgrounds
+                    where bg.name.EndsWith("Background", StringComparison.OrdinalIgnoreCase)
+                    select bg.name).ToList();
+
+                if (backgroundList.Count == 0)
+                {
+                    Log.Info(Locale("listbackground.none"), Logger);
+                    return;
+                }
+
+                var message = string.Join("\n", backgroundList);
+                Log.Info(Locale("listbackground.header", backgroundList.Count) + "\n" + message, Logger);
+            },
             null)
         );
         // ConsoleScript.Commands.Add(new Command(

@@ -14,6 +14,17 @@ public class ZhCnLangGenerator : ModLangGenBase
         Add("command.testhello.description", "测试Hello");
         Add("command.testhello.text", "你好世界 by Moss Lib! {0}!");
 
+        // Command - SpawnBlock
+        Add("command.spawnblock.description", "在鼠标位置生成一个方块。");
+        Add("command.spawnblock.blockid", "要生成的方块 ID。");
+        Add("command.spawnblock.invalid_blockid", "'{0}' 不是有效的方块 ID。");
+        Add("command.spawnblock.success", "已生成方块 {0}。");
+
+        // Command - ListBackground
+        Add("command.listbackground.description", "列出所有可用的背景 ID。");
+        Add("command.listbackground.header", "找到 {0} 个背景资源：");
+        Add("command.listbackground.none", "未找到背景资源。");
+
         // Tool - Console
         Add("tool.console.nullorempty", "命令不能为空或空值");
         Add("tool.console.notinitialized", "ConsoleScript 未初始化");
