@@ -1,4 +1,4 @@
-![alt text](Cover.png)
+![alt text](Covor.png)
 
 [English Guide](README.md)
 
@@ -23,9 +23,17 @@ _只是一个 [Black_Moss](https://github.com/Black-Moss) 的模组前置库。:
   - [GameConsole - 游戏控制台](#gameconsole---游戏控制台)
   - [World - 世界操作](#world---世界操作)
   - [Player - 玩家操作](#player---玩家操作)
+  - [Key - 输入处理](#key---输入处理)
   - [Multiplayer - 多人游戏](#multiplayer---多人游戏)
   - [Config - 配置](#config---配置)
+  - [RichText - 富文本](#richtext---富文本)
   - [Tools - 工具函数](#tools---工具函数)
+- [常量参考](#常量参考)
+  - [Blocks - 方块](#blocks---方块)
+  - [Items - 物品](#items---物品)
+  - [Backgrounds - 背景](#backgrounds---背景)
+  - [Keys - 按键](#keys---按键)
+- [UI 工具包（开发中）](#ui-工具包开发中)
 
 ---
 
@@ -42,9 +50,15 @@ _只是一个 [Black_Moss](https://github.com/Black-Moss) 的模组前置库。:
 | [`GameConsole`](Tool/Console.cs) | 编程式执行游戏控制台命令的封装 |
 | [`World`](Tool/World.cs) | 世界操作：放置方块、物品、背景图块 |
 | [`Player`](Tool/Player.cs) | 玩家操作：传送、屏幕提示、物品栏管理 |
+| [`Key`](Tool/Key.cs) | 输入处理：按键绑定检查、鼠标点击等待、世界坐标转换 |
 | [`Multiplayer`](Tool/Multiplayer.cs) | 多人游戏支持，通过反射集成 KrokoshaCasualtiesMP |
 | [`Config`](Tool/Config.cs) | BepInEx 配置项开关辅助 |
+| [`RichText`](Tool/RichText.cs) | Unity 富文本格式化：颜色、透明度、粗体、斜体、字号 |
 | [`Tools`](Tool/Tools.cs) | 参数验证、浮点/整数解析工具 |
+| [`Blocks`](Constant/Blocks.cs) | 强类型方块定义，包含属性 |
+| [`Items`](Constant/Items.cs) | 强类型物品定义，包含属性 |
+| [`Backgrounds`](Constant/Backgrounds.cs) | 背景 ID 字符串常量 |
+| [`Keys`](Constant/Keys.cs) | 强类型按键动作常量 |
 
 ---
 
@@ -300,14 +314,15 @@ GameConsole.RunCommand("some_command arg1 arg2");
 
 | 方法 | 说明 |
 |---|---|
-| [`PlaceBlock(x, y, block)`](Tool/World.cs:21) | 在指定方块坐标放置方块 |
-| [`PlaceBlock(vector2, block)`](Tool/World.cs:26) | 在 Vector2 位置放置方块 |
-| [`PlaceItem(x, y, item)`](Tool/World.cs:39) | 在指定方块坐标生成物品 |
-| [`PlaceItem(vector2, item)`](Tool/World.cs:44) | 在 Vector2 位置生成物品 |
-| [`PlaceBackground(pos, backgroundId)`](Tool/World.cs:61) | 放置背景图块 |
-| [`CreateTileMesh(pos)`](Tool/World.cs:113) | 为背景渲染创建平铺网格 |
-| [`CheckForWorld()`](Tool/World.cs:179) | 检查世界是否已加载，未加载则抛出异常 |
-| [`ClearCache()`](Tool/World.cs:185) | 清除精灵/网格/材质缓存 |
+| [`PlaceBlock(x, y, block)`](Tool/World.cs:24) | 在指定方块坐标放置方块 |
+| [`PlaceBlock(vector2, block)`](Tool/World.cs:29) | 在 Vector2 位置放置方块 |
+| [`PlaceItem(x, y, item)`](Tool/World.cs:42) | 在指定方块坐标生成物品 |
+| [`PlaceItem(vector2, item)`](Tool/World.cs:47) | 在 Vector2 位置生成物品 |
+| [`PlaceBackground(pos, backgroundId)`](Tool/World.cs:64) | 放置背景图块（接受 Vector2） |
+| [`PlaceBackground(pos, backgroundId)`](Tool/World.cs:71) | 放置背景图块（接受 Vector2Int） |
+| [`CreateTileMesh(pos)`](Tool/World.cs:123) | 为背景渲染创建平铺网格 |
+| [`CheckForWorld()`](Tool/World.cs:189) | 检查世界是否已加载，未加载则抛出异常 |
+| [`ClearCache()`](Tool/World.cs:195) | 清除精灵/网格/材质缓存 |
 
 ### Player - 玩家操作
 
@@ -327,6 +342,63 @@ Player.Alert("小心！", true);                // 重要提示
 Player.Tp(100.5f, 200.3f);                   // 传送
 Player.PickItem("rifle", 0, true);           // 将步枪放入槽位 0
 ```
+
+### Key - 输入处理
+
+[`Key`](Tool/Key.cs) — 输入处理工具。
+
+| 方法 | 说明 |
+|---|---|
+| [`HasKey(action)`](Tool/Key.cs:9) | 检查按键绑定动作名是否存在 |
+| [`IsKey(action)`](Tool/Key.cs:25) | 检查按键当前是否被按住 |
+| [`IsKeyDown(action)`](Tool/Key.cs:31) | 检查按键是否在当前帧被按下 |
+| [`IsKeyUp(action)`](Tool/Key.cs:37) | 检查按键是否在当前帧被释放 |
+| [`MouseWorldPosition()`](Tool/Key.cs:46) | 获取鼠标位置的世界坐标 |
+| [`LeftClickPosition()`](Tool/Key.cs:57) | 获取左键点击世界坐标（仅在点击帧有效） |
+| [`RightClickPosition()`](Tool/Key.cs:67) | 获取右键点击世界坐标（仅在点击帧有效） |
+
+**基于协程的等待方法** — 等待玩家点击后返回世界坐标：
+
+| 方法 | 说明 |
+|---|---|
+| [`WaitForLeftClick(Action<Vector2>)`](Tool/Key.cs:79) | 协程：等待左键点击，通过回调返回坐标 |
+| [`WaitForRightClick(Action<Vector2>)`](Tool/Key.cs:90) | 协程：等待右键点击，通过回调返回坐标 |
+| [`WaitForLeftClick()`](Tool/Key.cs:107) | 协程：等待左键点击，返回 `WaitForClickResult` |
+| [`WaitForRightClick()`](Tool/Key.cs:123) | 协程：等待右键点击，返回 `WaitForClickResult` |
+
+**`WaitForClickResult`** — 继承自 [`CustomYieldInstruction`](https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html)，支持 yield return 等待，等待完成后通过 `.Result` 获取点击位置的世界坐标。
+
+**按键动作常量** 定义在 [`Key.InputAction`](Tool/Key.cs:172) 中：
+
+| 常量 | 值 | 说明 |
+|---|---|---|
+| `InputAction.LeftClick` | `"attack"` | 左键点击动作 |
+| `InputAction.RightClick` | `"iteminteract"` | 右键点击动作 |
+
+```csharp
+// 检查当前帧是否左键点击
+if (Key.IsKeyDown(Key.InputAction.LeftClick))
+{
+    Vector2 pos = Key.MouseWorldPosition();
+    // 执行操作...
+}
+
+// ── 协程：等待玩家点击 ──
+IEnumerator MyCoroutine()
+{
+    // 方式一：回调模式
+    yield return Key.WaitForLeftClick(pos => {
+        Player.Tp(pos);
+    });
+
+    // 方式二：结果模式（更清爽）
+    var waiter = Key.WaitForRightClick();
+    yield return waiter;
+    Player.Tp(waiter.Result);
+}
+```
+
+完整的按键动作名列表请参见 [`Constant/Keys`](Constant/Keys.cs)。
 
 ### Multiplayer - 多人游戏
 
@@ -366,6 +438,50 @@ ConfigEntry<bool> mySetting = Config.Bind("General", "MySetting", true, "说明"
 Config.SwitchType(mySetting, "我的设置");
 ```
 
+### RichText - 富文本
+
+[`RichText`](Tool/RichText.cs) — Unity 富文本格式化工具，用于游戏控制台消息美化。
+
+| 方法 | 说明 |
+|---|---|
+| [`Color(text, color)`](Tool/RichText.cs:10) | 用颜色名称包裹 `<color>` 标签 |
+| [`Color(text, color)`](Tool/RichText.cs:18) | 用 Unity `Color` 包裹 `<color>` 标签 |
+| [`Hex(text, hex)`](Tool/RichText.cs:23) | 用十六进制颜色包裹 `<color>` 标签 |
+| [`Alpha(text, alphaHex)`](Tool/RichText.cs:44) | 用十六进制透明度设置文本透明度 |
+| [`Alpha(text, alpha)`](Tool/RichText.cs:54) | 用浮点数（0–1）设置透明度 |
+| [`Alpha(text, alpha)`](Tool/RichText.cs:61) | 用字节（0–255）设置透明度 |
+| [`Alpha(text, alpha)`](Tool/RichText.cs:66) | 用整数（0–255）设置透明度 |
+| [`Bold(text)`](Tool/RichText.cs:71) | 用 `<b>` 标签包裹文本 |
+| [`Italic(text)`](Tool/RichText.cs:77) | 用 `<i>` 标签包裹文本 |
+| [`Size(text, size)`](Tool/RichText.cs:83) | 用 `<size>` 标签设置字号 |
+
+**快捷颜色方法：**
+
+| 方法 | 颜色 |
+|---|---|
+| [`Blue(text)`](Tool/RichText.cs:30) | `blue` |
+| [`Red(text)`](Tool/RichText.cs:31) | `red` |
+| [`Green(text)`](Tool/RichText.cs:32) | `green` |
+| [`Yellow(text)`](Tool/RichText.cs:33) | `yellow` |
+| [`White(text)`](Tool/RichText.cs:34) | `white` |
+| [`Black(text)`](Tool/RichText.cs:35) | `black` |
+| [`Cyan(text)`](Tool/RichText.cs:36) | `cyan` |
+| [`Magenta(text)`](Tool/RichText.cs:37) | `magenta` |
+| [`Gray(text)`](Tool/RichText.cs:38) | `gray` |
+| [`Orange(text)`](Tool/RichText.cs:39) | `orange` |
+| [`Purple(text)`](Tool/RichText.cs:40) | `purple` |
+| [`Pink(text)`](Tool/RichText.cs:41) | `pink` |
+| [`Brown(text)`](Tool/RichText.cs:42) | `brown` |
+
+```csharp
+// 格式化彩色控制台消息
+string msg = RichText.Color("警告：", "red") + RichText.Bold("生命值过低！");
+Log.Info(msg, Plugin.Logger);
+
+// 使用十六进制颜色
+string fancy = RichText.Hex("你好", "#FF8800") + " " + RichText.Italic("世界");
+```
+
 ### Tools - 工具函数
 
 [`Tools`](Tool/Tools.cs) — 参数解析与验证工具函数。
@@ -386,6 +502,157 @@ int count = Tools.ParseInt(args[2]);        // 解析整数参数
 
 ---
 
+## 常量参考
+
+[`Constant/`](Constant/) 命名空间提供了游戏对象的强类型常量，让你可以更安全、更方便地引用方块、物品、背景和按键绑定，无需记忆字符串 ID。
+
+### Blocks - 方块
+
+[`Blocks`](Constant/Blocks.cs) — 强类型方块定义。可隐式转换为 `ushort`。
+
+| 属性 | 类型 | 说明 |
+|---|---|---|
+| `Id` | `ushort` | 方块 ID |
+| `LocaleKey` | `string` | 本地化键 |
+| `Health` | `float` | 方块耐久 |
+| `HitSound` | `string` | 被击打音效 |
+| `StepSound` | `string` | 行走音效 |
+| `SleepQuality` | `string` | 睡眠质量评级 |
+| `IsMetallic` | `bool` | 是否为金属 |
+| `NoVariation` | `bool` | 是否有视觉变体 |
+| `Toxicity` | `float` | 毒性等级 |
+| `IsSlippery` | `bool` | 是否湿滑 |
+
+**常用方块常量：**
+
+| 常量 | ID | 耐久 |
+|---|---|---|
+| [`Blocks.Air`](Constant/Blocks.cs:50) | 0 | 0 |
+| [`Blocks.LightRock`](Constant/Blocks.cs:51) | 1 | 100 |
+| [`Blocks.Gravel`](Constant/Blocks.cs:52) | 2 | 25 |
+| [`Blocks.ConcreteTile`](Constant/Blocks.cs:55) | 5 | 800 |
+| [`Blocks.SteelTile`](Constant/Blocks.cs:56) | 6 | 5000 |
+| [`Blocks.Wood`](Constant/Blocks.cs:61) | 11 | 150 |
+| [`Blocks.Granite`](Constant/Blocks.cs:67) | 17 | 200 |
+| [`Blocks.Copper`](Constant/Blocks.cs:84) | 34 | 2000 |
+| [`Blocks.Ilmenite`](Constant/Blocks.cs:85) | 35 | 4000 |
+
+使用 [`Blocks.FromId(ushort)`](Constant/Blocks.cs:87) 从 ID 解析对应的方块常量。
+
+```csharp
+// 使用强类型常量放置方块
+World.PlaceBlock(10, 20, Blocks.Granite);
+World.PlaceBlock(new Vector2(15, 25), Blocks.SteelTile);
+
+// 隐式转换为 ushort
+ushort blockId = Blocks.Copper; // 34
+```
+
+### Items - 物品
+
+[`Items`](Constant/Items.cs) — 强类型物品定义。可隐式转换为 `string`。
+
+| 属性 | 类型 | 说明 |
+|---|---|---|
+| `Id` | `string` | 物品 ID |
+| `Category` | `string` | 物品分类（food, medical, tool 等） |
+| `Weight` | `float` | 物品重量 |
+| `Value` | `int` | 物品价值 |
+| `Rec` | `int` | 稀有度/配方等级 |
+
+**常用物品常量：**
+
+| 常量 | 分类 |
+|---|---|
+| [`Items.Rifle`](Constant/Items.cs:228) | `tool` |
+| [`Items.Shotgun`](Constant/Items.cs:246) | `tool` |
+| [`Items.Bandage`](Constant/Items.cs:52) | `medical` |
+| [`Items.Medkit`](Constant/Items.cs:182) | `container` |
+| [`Items.Bread`](Constant/Items.cs:72) | `food` |
+| [`Items.WaterBottle`](Constant/Items.cs:292) | `water` |
+| [`Items.BigPack`](Constant/Items.cs:56) | `container` |
+| [`Items.Jetpack`](Constant/Items.cs:152) | `utility` |
+
+使用 [`Items.FromId(string)`](Constant/Items.cs:308) 从 ID 解析对应的物品常量。
+
+```csharp
+// 使用强类型常量给予物品
+Player.PickItem(Items.Rifle, 0, true);
+Player.PickItem(Items.Bandage, 1);
+
+// 隐式转换为 string
+string itemId = Items.Rifle; // "rifle"
+```
+
+### Backgrounds - 背景
+
+[`Backgrounds`](Constant/Backgrounds.cs) — 背景图块 ID 字符串常量。
+
+| 常量 | 值 |
+|---|---|
+| [`Backgrounds.Fungal`](Constant/Backgrounds.cs:5) | `"fungalBackground"` |
+| [`Backgrounds.Grass`](Constant/Backgrounds.cs:6) | `"grassBackground"` |
+| [`Backgrounds.Ice`](Constant/Backgrounds.cs:7) | `"iceBackground"` |
+| [`Backgrounds.Rock`](Constant/Backgrounds.cs:8) | `"rockBackground"` |
+| [`Backgrounds.Sand`](Constant/Backgrounds.cs:9) | `"sandBackground"` |
+| [`Backgrounds.Soil`](Constant/Backgrounds.cs:10) | `"soilBackground"` |
+| [`Backgrounds.Steel`](Constant/Backgrounds.cs:11) | `"steelBackground"` |
+| [`Backgrounds.Vents`](Constant/Backgrounds.cs:12) | `"ventsBackground"` |
+| [`Backgrounds.Wasteland`](Constant/Backgrounds.cs:13) | `"wastelandBackground"` |
+
+```csharp
+// 使用常量放置背景
+World.PlaceBackground(new Vector2Int(10, 20), Backgrounds.Grass);
+World.PlaceBackground(new Vector2(15f, 25f), Backgrounds.Sand);
+```
+
+### Keys - 按键
+
+[`Keys`](Constant/Keys.cs) — 强类型按键动作常量。可隐式转换为 `string`。
+
+| 常量 | 动作名 |
+|---|---|
+| [`Keys.Jump`](Constant/Keys.cs:22) | `"jump"` |
+| [`Keys.Up`](Constant/Keys.cs:23) | `"up"` |
+| [`Keys.Left`](Constant/Keys.cs:24) | `"left"` |
+| [`Keys.Right`](Constant/Keys.cs:25) | `"right"` |
+| [`Keys.Down`](Constant/Keys.cs:26) | `"down"` |
+| [`Keys.Attack`](Constant/Keys.cs:36) | `"attack"` |
+| [`Keys.ItemInteract`](Constant/Keys.cs:37) | `"iteminteract"` |
+| [`Keys.Throw`](Constant/Keys.cs:29) | `"throw"` |
+| [`Keys.ToggleInventory`](Constant/Keys.cs:32) | `"toggleinventory"` |
+| [`Keys.Pause`](Constant/Keys.cs:40) | `"pause"` |
+| [`Keys.Console`](Constant/Keys.cs:41) | `"console"` |
+| [`Keys.Craft`](Constant/Keys.cs:43) | `"craft"` |
+
+使用 [`Keys.FromAction(string)`](Constant/Keys.cs:45) 从动作名解析对应的按键常量。
+
+```csharp
+// 使用常量检查按键绑定
+if (Key.IsKeyDown(Keys.Attack))
+{
+    // 玩家攻击了
+}
+
+// 隐式转换为 string
+string action = Keys.Jump; // "jump"
+```
+
+---
+
+## UI 工具包（开发中）
+
+[`Tool/UI/`](Tool/UI/) 目录包含正在开发中的 UI 创建工具，用于构建游戏内模组界面。目前**代码被注释掉**，正在积极开发中。
+
+| 文件 | 说明 |
+|---|---|
+| [`UILayout`](Tool/UI/UILayout.cs) | Canvas 管理、面板创建、RectTransform 辅助 |
+| [`UIWidgets`](Tool/UI/UIWidgets.cs) | 按钮和文本创建，支持游戏风格样式和本地化 |
+
+将在未来版本中启用。
+
+---
+
 ## 项目结构
 
 ```
@@ -395,6 +662,11 @@ MossLib/
 │   ├── ModCommandBase.cs        # 指令注册基类
 │   ├── ModLangGenBase.cs        # 语言生成器基类
 │   └── ModLocaleBase.cs         # 本地化基类
+├── Constant/
+│   ├── Backgrounds.cs           # 背景 ID 常量
+│   ├── Blocks.cs                # 强类型方块定义
+│   ├── Items.cs                 # 强类型物品定义
+│   └── Keys.cs                  # 按键动作名常量
 ├── Example/
 │   ├── ModCommand.cs            # 指令实现示例
 │   ├── ModLocale.cs             # 本地化实现示例
@@ -405,10 +677,15 @@ MossLib/
 └── Tool/
     ├── Config.cs                # 配置操作工具
     ├── Console.cs               # 游戏控制台封装
+    ├── Key.cs                   # 输入处理（按键绑定、鼠标点击等待）
     ├── LocaleGenerator.cs       # 语言文件生成器管理器
     ├── Log.cs                   # 控制台日志工具
     ├── Multiplayer.cs           # 多人游戏集成
     ├── Player.cs                # 玩家操作工具
+    ├── RichText.cs              # 富文本格式化工具
     ├── Tools.cs                 # 参数解析工具
-    └── World.cs                 # 世界操作工具
+    ├── World.cs                 # 世界操作工具
+    └── UI/                      # UI 工具包（开发中，代码被注释）
+        ├── UILayout.cs          # Canvas 和面板创建
+        └── UIWidgets.cs         # 按钮和文本创建
 ```
