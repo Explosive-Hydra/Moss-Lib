@@ -38,6 +38,58 @@ public static class Key
         return keyCode != KeyCode.None && Input.GetKeyUp(keyCode);
     }
 
+    private static Camera _mainCamera;
+    private static bool _cameraSearched;
+
+    public static Vector2 MouseWorldPosition()
+    {
+        if (!TryGetMainCamera(out var camera))
+            return Vector2.zero;
+
+        return camera.ScreenToWorldPoint(Input.mousePosition);
+    }
+
+    public static Vector2? LeftClickPosition()
+    {
+        if (!IsKeyDown(InputAction.LeftClick))
+            return null;
+        return MouseWorldPosition();
+    }
+
+    public static Vector2? RightClickPosition()
+    {
+        if (!IsKeyDown(InputAction.RightClick))
+            return null;
+        return MouseWorldPosition();
+    }
+
+    private static bool TryGetMainCamera(out Camera camera)
+    {
+        if (_mainCamera != null)
+        {
+            camera = _mainCamera;
+            return true;
+        }
+
+        if (_cameraSearched)
+        {
+            camera = null;
+            return false;
+        }
+
+        _mainCamera = Camera.main;
+        _cameraSearched = true;
+
+        if (_mainCamera != null)
+        {
+            camera = _mainCamera;
+            return true;
+        }
+
+        camera = null;
+        return false;
+    }
+
     private static KeyCode ResolveKeyCode(string action)
     {
         if (action == null)
@@ -53,5 +105,11 @@ public static class Key
                && KeyBinds.binds.codeBinds.TryGetValue(action, out var keyCode)
             ? keyCode
             : KeyCode.None;
+    }
+
+    public static class InputAction
+    {
+        public const string LeftClick = "attack";
+        public const string RightClick = "iteminteract";
     }
 }

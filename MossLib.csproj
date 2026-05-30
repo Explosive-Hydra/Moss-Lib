@@ -43,6 +43,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>F:\CasualtiesUnknownDemo\CasualtiesUnknown_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="BuildMod">
+      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\BuildMod.dll</HintPath>
+    </Reference>
     <Reference Include="Custom Structures">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\CustomStructures\Custom Structures.dll</HintPath>
     </Reference>

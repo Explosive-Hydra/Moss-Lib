@@ -254,6 +254,7 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CDownloads_005CCU_0020mod_005Cdll_005CUnityEngine_002EUI_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CDownloads_005Cdll_005CUnity_002ETextMeshPro_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CDownloads_005Cdll_005CUnityEngine_002EUI_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CCasualties_0020Unknown_0020Demo_005CBepInEx_005CBuildMod_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CCasualties_0020Unknown_0020Demo_005CBepInEx_005CCustomStructures_005CCustom_0020Structures_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CCasualties_0020Unknown_0020Demo_005CBepInEx_005CKrokMP_005CKrokoshaCasualtiesMP_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=F_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CCasualties_0020Unknown_0020Demo_005CBepInEx_005Cplugins_005CKrokMP_005CKrokoshaCasualtiesMP_002Edll/@EntryIndexedValue">True</s:Boolean>
@@ -285,6 +286,7 @@
   &lt;Assembly Path="F:\CasualtiesUnknownDemo\CasualtiesUnknown_Data\Managed\Assembly-CSharp.dll" /&gt;&#xD;
   &lt;Assembly Path="F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\KrokMP\KrokoshaCasualtiesMP.dll" /&gt;&#xD;
   &lt;Assembly Path="F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\QoL Unknown.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\BepInEx\BuildMod.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=bepinex/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=mosslib/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
