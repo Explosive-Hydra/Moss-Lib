@@ -60,11 +60,6 @@ public static class World
             Error("placeitem", vector2, item, ex);
         }
     }
-    
-    public static void PlaceBackground(Vector2 pos, BackgroundType backgroundType)
-    {
-        PlaceBackground(pos, backgroundType.ToString());
-    }
 
     public static void PlaceBackground(Vector2 pos, string backgroundId)
     {
@@ -231,17 +226,4 @@ public static class World
     {
         return ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
     }
-}
-
-public class BackgroundType
-{
-    public static string Fungal = "fungalBackground";
-    public static string Grass = "grassBackground";
-    public static string Ice = "iceBackground";
-    public static string Rock = "rockBackground";
-    public static string Sand = "sandBackground";
-    public static string Soil = "soilBackground";
-    public static string Steel = "steelBackground";
-    public static string Vents = "ventsBackground";
-    public static string Wasteland = "wastelandBackground";
 }
