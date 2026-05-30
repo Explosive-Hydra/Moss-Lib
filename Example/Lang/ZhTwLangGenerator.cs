@@ -26,6 +26,12 @@ public class ZhTwLangGenerator : ModLangGenBase
         Add("command.listbackground.header", "找到 {0} 個背景資源：");
         Add("command.listbackground.none", "未找到背景資源。");
 
+        // Command - SpawnBackground
+        Add("command.spawnbackground.description", "在滑鼠位置生成一個背景。");
+        Add("command.spawnbackground.backgroundid", "要生成的背景 ID。");
+        Add("command.spawnbackground.invalid_backgroundid", "背景 ID 不能為空。");
+        Add("command.spawnbackground.success", "已生成背景 {0}。");
+
         // Tool - Console
         Add("tool.console.nullorempty", "命令不能為空或空值");
         Add("tool.console.notinitialized", "ConsoleScript 未初始化");

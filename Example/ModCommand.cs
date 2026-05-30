@@ -48,6 +48,31 @@ public class ModCommand : ModCommandBase
             },
             ("blockid", Locale("spawnblock.blockid")))
         );
+        
+        ConsoleScript.Commands.Add(new Command(
+            "spawnbackground",
+            Locale("spawnbackground.description"),
+            args =>
+            {
+                World.CheckForWorld();
+                Tools.CheckArgumentCount(args, 1);
+
+                var backgroundId = args[1];
+                if (string.IsNullOrWhiteSpace(backgroundId))
+                {
+                    Log.Error(Locale("spawnbackground.invalid_backgroundid"), Logger);
+                    return;
+                }
+
+                World.PlaceBackground(Key.MouseWorldPosition(), backgroundId);
+                Log.Info(Locale("spawnbackground.success", backgroundId), Logger);
+            },
+            new Dictionary<int, List<string>>
+            {
+                { 0, ["backgroundid"] }
+            },
+            ("backgroundid", Locale("spawnbackground.backgroundid")))
+        );
 
         ConsoleScript.Commands.Add(new Command(
             "listbackground",

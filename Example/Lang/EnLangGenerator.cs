@@ -25,6 +25,12 @@ public class EnLangGenerator : ModLangGenBase
         Add("command.listbackground.header", "Found {0} background(s):");
         Add("command.listbackground.none", "No background resources found.");
 
+        // Command - SpawnBackground
+        Add("command.spawnbackground.description", "Spawns a background at the cursor position.");
+        Add("command.spawnbackground.backgroundid", "The ID of the background to spawn.");
+        Add("command.spawnbackground.invalid_backgroundid", "Background ID cannot be empty.");
+        Add("command.spawnbackground.success", "Spawned background {0}.");
+
         // Tool - Console
         Add("tool.console.nullorempty", "Command cannot be null or empty");
         Add("tool.console.notinitialized", "ConsoleScript not initialized");
