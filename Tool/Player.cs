@@ -1,8 +1,11 @@
-﻿using MossLib.Example;
+﻿using System.Diagnostics.CodeAnalysis;
+using MossLib.Example;
 using UnityEngine;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Player
 {
     private const string LocaleKeyPre = "tool.player.";
@@ -64,7 +67,9 @@ public static class Player
             throw new System.ArgumentException(
                 Locale("item.nullorempty"), nameof(item));
 
-        if (slot < 0 || slot >= MaxInventorySlots)
+        if (slot 
+            is < 0 
+            or >= MaxInventorySlots)
             throw new System.ArgumentOutOfRangeException(nameof(slot), slot,
                 Locale("slot.outofrange", MaxInventorySlots));
 

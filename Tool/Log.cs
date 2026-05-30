@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
 [HarmonyPatch(typeof(ConsoleScript))]
 public static class Log
 {

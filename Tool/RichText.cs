@@ -1,15 +1,18 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class RichText
 {
     public static string Color(string text, string color)
     {
         if (string.IsNullOrEmpty(text)) return text ?? string.Empty;
-        if (string.IsNullOrEmpty(color)) return text;
-
-        return $"<color={color}>{text}</color>";
+        return string.IsNullOrEmpty(color)
+            ? text
+            : $"<color={color}>{text}</color>";
     }
 
     public static string Color(string text, Color color)

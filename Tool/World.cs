@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using MossLib.Example;
 using UnityEngine;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class World
 {
     private const string LocaleKeyPre = "tool.world.";
@@ -101,9 +104,9 @@ public static class World
             _cachedBgMaterial = new Material(WorldGeneration.world.defaultMat)
             {
                 mainTextureScale = Vector2.one,
-                mainTextureOffset = Vector2.one
+                mainTextureOffset = Vector2.one,
+                color = Color.gray
             };
-            _cachedBgMaterial.color = Color.gray;
         }
 
         _cachedBgMaterial.mainTexture = sprite.texture;

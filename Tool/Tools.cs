@@ -5,7 +5,6 @@ using MossLib.Example;
 
 namespace MossLib.Tool;
 
-[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Tools
 {

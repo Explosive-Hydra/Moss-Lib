@@ -1,7 +1,11 @@
-﻿using MossLib.Example;
+﻿using System.Diagnostics.CodeAnalysis;
+using MossLib.Example;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class GameConsole
 {
     public static readonly ConsoleScript Instance = ConsoleScript.instance;

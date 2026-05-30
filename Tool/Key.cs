@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Key
 {
     public static bool HasKey(string action)
@@ -49,18 +54,40 @@ public static class Key
         return camera.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    public static Vector2? LeftClickPosition()
+    public static Vector2 LeftClickPosition()
     {
-        if (!IsKeyDown(InputAction.LeftClick))
-            return null;
-        return MouseWorldPosition();
+        return !IsKeyDown(InputAction.LeftClick) 
+            ? Vector2.zero
+            : MouseWorldPosition();
     }
 
-    public static Vector2? RightClickPosition()
+    public static Vector2 RightClickPosition()
     {
-        if (!IsKeyDown(InputAction.RightClick))
-            return null;
-        return MouseWorldPosition();
+        return !IsKeyDown(InputAction.RightClick)
+            ? Vector2.zero 
+            : MouseWorldPosition();
+    }
+
+    public static IEnumerator WaitForLeftClick(Action<Vector2> callback)
+    {
+        yield return new WaitUntil(() => IsKeyDown(InputAction.LeftClick));
+        callback?.Invoke(MouseWorldPosition());
+    }
+
+    public static IEnumerator WaitForRightClick(Action<Vector2> callback)
+    {
+        yield return new WaitUntil(() => IsKeyDown(InputAction.RightClick));
+        callback?.Invoke(MouseWorldPosition());
+    }
+
+    public static WaitForClickResult WaitForLeftClick()
+    {
+        return new WaitForClickResult(InputAction.LeftClick);
+    }
+
+    public static WaitForClickResult WaitForRightClick()
+    {
+        return new WaitForClickResult(InputAction.RightClick);
     }
 
     private static bool TryGetMainCamera(out Camera camera)
@@ -111,5 +138,29 @@ public static class Key
     {
         public const string LeftClick = "attack";
         public const string RightClick = "iteminteract";
+    }
+
+    public sealed class WaitForClickResult(string action) : CustomYieldInstruction
+    {
+        private readonly string _action = action ?? throw new ArgumentNullException(nameof(action));
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public Vector2 Result { get; private set; }
+
+        public override bool keepWaiting
+        {
+            get
+            {
+                if (field)
+                    return false;
+
+                if (!IsKeyDown(_action))
+                    return true;
+
+                Result = MouseWorldPosition();
+                field = true;
+                return false;
+            }
+        }
     }
 }

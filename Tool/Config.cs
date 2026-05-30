@@ -1,9 +1,13 @@
-﻿using BepInEx.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using MossLib.Example;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Config
 {
     private const string LogKeyPre = "tool.config.";

@@ -1,11 +1,14 @@
 ﻿using BepInEx;
 using UnityEngine;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using MossLib.Example;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [BepInDependency("KrokoshaCasualtiesMP", BepInDependency.DependencyFlags.SoftDependency)]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Multiplayer
 {
     private const string LocaleKeyPre = "tool.multiplayer.";
@@ -86,7 +89,7 @@ public static class Multiplayer
         if (PlayerCamera.main.body == null)
             throw new InvalidOperationException(ModLocale.GetFormat("tool.player.bodynull"));
 
-        bool success = false;
+        bool success;
         string actualName = playerName;
 
         if (playerName == "@a")
@@ -111,43 +114,6 @@ public static class Multiplayer
     public static void Tp(string playerName, float x, float y)
     {
         Tp(playerName, new Vector2(x, y));
-    }
-
-    private static object GetLocalNetBody()
-    {
-        try
-        {
-            var netPlayerType = Type.GetType("NetPlayer, Assembly-CSharp");
-            if (netPlayerType == null)
-                return null;
-
-            var method = netPlayerType.GetMethod("GetLocalNetBodyNullable");
-            if (method == null)
-                return null;
-
-            return method.Invoke(null, null);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static object GetPlayerFromNetBody(object netBody)
-    {
-        if (netBody == null)
-            return null;
-
-        try
-        {
-            var type = netBody.GetType();
-            var prop = type.GetProperty("plr");
-            return prop?.GetValue(netBody, null);
-        }
-        catch
-        {
-            return null;
-        }
     }
 
     private static void TeleportPlayer(object player, Vector2 position)
@@ -179,19 +145,6 @@ public static class Multiplayer
         catch (Exception ex)
         {
             Log.Error($"Failed to teleport player: {ex.Message}", Plugin.Logger);
-        }
-    }
-
-    private static void ServerTeleportCharacter(object player, Vector2 position)
-    {
-        try
-        {
-            var method = player.GetType().GetMethod("Server_TeleportCharacter");
-            method?.Invoke(player, [position]);
-        }
-        catch (Exception ex)
-        {
-            Log.Error($"Failed to server teleport: {ex.Message}", Plugin.Logger);
         }
     }
 

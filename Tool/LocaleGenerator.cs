@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BepInEx.Logging;
 using MossLib.Base;
@@ -7,6 +8,9 @@ using MossLib.Example.Lang;
 
 namespace MossLib.Tool;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class LocaleGenerator
 {
     private static readonly List<ModLangGenBase> Generators = [];
@@ -77,6 +81,7 @@ public static class LocaleGenerator
     public static void GenerateSingle(string languageCode, string outputDirectory = null)
     {
         if (string.IsNullOrWhiteSpace(languageCode))
+            // ReSharper disable once LocalizableElement
             throw new ArgumentException("Language code cannot be null or empty", nameof(languageCode));
 
         var generator = Generators.Find(g =>
