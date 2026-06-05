@@ -1,9 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using MossLib.Base;
 using MossLib.Example;
-using MossLib.Example.Lang;
 using MossLib.Tool;
 
 namespace MossLib;
@@ -12,9 +10,9 @@ namespace MossLib;
 public class Plugin : BaseUnityPlugin
 {
     public new static ManualLogSource Logger;
-    public const string Guid = "blackmoss.mosslib";
+    public const string Guid = "ExplosiveHydra.MossLib";
     public const string Name = "Moss Lib";
-    public const string Version = "1.1.0";
+    public const string Version = "1.1.1";
     private readonly Harmony _harmony = new(Guid);
 
     private const string LocaleKeyPre = "mosslib.";

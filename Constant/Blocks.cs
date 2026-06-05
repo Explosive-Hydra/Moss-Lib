@@ -46,7 +46,7 @@ public sealed class Blocks
     public override string ToString() => LocaleKey;
     public override bool Equals(object? obj) => obj is Blocks other && Id == other.Id;
     public override int GetHashCode() => Id.GetHashCode();
-    
+
     public static readonly Blocks Air = new(0, "air", 0f, "", "Rock");
     public static readonly Blocks LightRock = new(1, "lightrock", 100f, "rock", "Rock", "Bad");
     public static readonly Blocks Gravel = new(2, "gravel", 25f, "dirt", "Gravel");
