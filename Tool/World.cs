@@ -39,6 +39,71 @@ public static class World
         }
     }
 
+    public static void FillBlocks(int startX, int startY, int endX, int endY, ushort block)
+    {
+        CheckForWorld();
+
+        try
+        {
+            var world = WorldGeneration.world;
+            var clampedStartX = Mathf.Clamp(startX, 0, (int)world.width - 2);
+            var clampedStartY = Mathf.Clamp(startY, 0, (int)world.height - 2);
+            var clampedEndX = Mathf.Clamp(endX, 0, (int)world.width - 2);
+            var clampedEndY = Mathf.Clamp(endY, 0, (int)world.height - 2);
+
+            for (var x = clampedStartX; x <= clampedEndX; x++)
+            for (var y = clampedStartY; y <= clampedEndY; y++)
+                world.SetBlockNoUpdate(new Vector2Int(x, y), block);
+
+            var chunkStartX = clampedStartX / WorldGeneration.CHUNKSIZE;
+            var chunkStartY = clampedStartY / WorldGeneration.CHUNKSIZE;
+            var chunkEndX = clampedEndX / WorldGeneration.CHUNKSIZE;
+            var chunkEndY = clampedEndY / WorldGeneration.CHUNKSIZE;
+
+            for (var cx = chunkStartX; cx <= chunkEndX; cx++)
+            for (var cy = chunkStartY; cy <= chunkEndY; cy++)
+                world.UpdateChunk(new Vector2Int(cx, cy));
+        }
+        catch (Exception ex)
+        {
+            Error("fillblocks", startX, startY, endX, endY, block, ex);
+        }
+    }
+
+    public static void FillBlocks(int startX, int startY, ushort[,] blocks)
+    {
+        if (blocks == null)
+            throw new ArgumentNullException(nameof(blocks));
+
+        CheckForWorld();
+
+        try
+        {
+            var world = WorldGeneration.world;
+            var width = blocks.GetLength(0);
+            var height = blocks.GetLength(1);
+            var maxX = Mathf.Min(startX + width, (int)world.width - 2);
+            var maxY = Mathf.Min(startY + height, (int)world.height - 2);
+
+            for (var x = 0; x < width && startX + x <= maxX; x++)
+            for (var y = 0; y < height && startY + y <= maxY; y++)
+                world.SetBlockNoUpdate(new Vector2Int(startX + x, startY + y), blocks[x, y]);
+
+            var chunkStartX = Mathf.Max(startX, 0) / WorldGeneration.CHUNKSIZE;
+            var chunkStartY = Mathf.Max(startY, 0) / WorldGeneration.CHUNKSIZE;
+            var chunkEndX = maxX / WorldGeneration.CHUNKSIZE;
+            var chunkEndY = maxY / WorldGeneration.CHUNKSIZE;
+
+            for (var cx = chunkStartX; cx <= chunkEndX; cx++)
+            for (var cy = chunkStartY; cy <= chunkEndY; cy++)
+                world.UpdateChunk(new Vector2Int(cx, cy));
+        }
+        catch (Exception ex)
+        {
+            Error("fillblocks", startX, startY, blocks, ex);
+        }
+    }
+
     public static void PlaceItem(int x, int y, string item)
     {
         PlaceItem(new Vector2(x, y), item);

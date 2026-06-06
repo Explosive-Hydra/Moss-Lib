@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 namespace MossLib.Constant;
 
@@ -6,53 +7,27 @@ namespace MossLib.Constant;
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Keys
 {
-    public const string Jump = "jump";
-    public const string Up = "up";
-    public const string Left = "left";
-    public const string Right = "right";
-    public const string Down = "down";
-    public const string WoundView = "woundview";
-    public const string Throw = "throw";
-    public const string SwitchHands = "switchhands";
-    public const string ToggleInventory = "toggleinventory";
-    public const string Speed1 = "speed1";
-    public const string Speed2 = "speed2";
-    public const string Speed3 = "speed3";
-    public const string Ragdoll = "ragdoll";
-    public const string ExpandDesc = "expanddesc";
-    public const string Attack = "attack";
-    public const string ItemInteract = "iteminteract";
-    public const string Pause = "pause";
-    public const string Console = "console";
-    public const string Restart = "restart";
-    public const string Craft = "craft";
-    public const string Bark = "bark";
-    public const string Favourite = "favourite";
-
-    public static string FromAction(string action) => action switch
-    {
-        "jump" => Jump,
-        "up" => Up,
-        "left" => Left,
-        "right" => Right,
-        "down" => Down,
-        "woundview" => WoundView,
-        "throw" => Throw,
-        "switchhands" => SwitchHands,
-        "toggleinventory" => ToggleInventory,
-        "speed1" => Speed1,
-        "speed2" => Speed2,
-        "speed3" => Speed3,
-        "ragdoll" => Ragdoll,
-        "expanddesc" => ExpandDesc,
-        "attack" => Attack,
-        "iteminteract" => ItemInteract,
-        "pause" => Pause,
-        "console" => Console,
-        "restart" => Restart,
-        "craft" => Craft,
-        "bark" => Bark,
-        "favourite" => Favourite,
-        _ => null!
-    };
+    public static KeyCode Jump = KeyBinds.GetBind("jump");
+    public static KeyCode Up = KeyBinds.GetBind("up");
+    public static KeyCode Left = KeyBinds.GetBind("left");
+    public static KeyCode Right = KeyBinds.GetBind("right");
+    public static KeyCode Down = KeyBinds.GetBind("down");
+    public static KeyCode WoundView = KeyBinds.GetBind("woundview");
+    public static KeyCode Throw = KeyBinds.GetBind("throw");
+    public static KeyCode SwitchHands = KeyBinds.GetBind("switchhands");
+    public static KeyCode ToggleInventory = KeyBinds.GetBind("toggleinventory");
+    public static KeyCode Speed1 = KeyBinds.GetBind("speed1");
+    public static KeyCode Speed2 = KeyBinds.GetBind("speed2");
+    public static KeyCode Speed3 = KeyBinds.GetBind("speed3");
+    public static KeyCode Ragdoll = KeyBinds.GetBind("ragdoll");
+    public static KeyCode ExpandDesc = KeyBinds.GetBind("expanddesc");
+    public static KeyCode Attack = KeyBinds.GetBind("attack");
+    public static KeyCode ItemInteract = KeyBinds.GetBind("iteminteract");
+    public static KeyCode Pause = KeyBinds.GetBind("pause");
+    public static KeyCode Console = KeyBinds.GetBind("console");
+    public static KeyCode Restart = KeyBinds.GetBind("restart");
+    public static KeyCode Craft = KeyBinds.GetBind("craft");
+    public static KeyCode Bark = KeyBinds.GetBind("bark");
+    public static KeyCode Favourite = KeyBinds.GetBind("favourite");
+    public static KeyCode QuickStash =  KeyBinds.GetBind("quickstash");
 }
