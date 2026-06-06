@@ -10,7 +10,7 @@ namespace MossLib;
 public class Plugin : BaseUnityPlugin
 {
     public new static ManualLogSource Logger;
-    public const string Guid = "ExplosiveHydra.MossLib";
+    public const string Guid = "org.explosivehydra.mosslib";
     public const string Name = "Moss Lib";
     public const string Version = "1.1.1";
     private readonly Harmony _harmony = new(Guid);
