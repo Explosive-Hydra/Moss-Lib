@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>F:\CasualtiesUnknownDemo\CasualtiesUnknown_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="com.lachee.discordrpc.runtime">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\com.lachee.discordrpc.runtime.dll</HintPath>
@@ -53,6 +53,9 @@
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MossLib">
+      <HintPath>..\Moss-Lib\obj\Debug\net472\MossLib.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\netstandard.dll</HintPath>
