@@ -1,6 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using BepInEx.Configuration;
-using BepInEx.Logging;
 using MossLib.Example;
 
 namespace MossLib.Tool;
@@ -10,39 +12,64 @@ namespace MossLib.Tool;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Config
 {
-    private const string LogKeyPre = "tool.config.";
+    private const string LocaleKeyPre = "tool.config.";
 
-    public static void ChangeConfig<T>(ConfigEntry<T> entry, T value)
+    public static ConfigEntry<T> Register<T>(ConfigFile configFile, string section, string key, T defaultValue,
+        Func<string, string> getLocale, Dictionary<string, ConfigEntryBase> registry)
     {
-        if (entry == null)
-            throw new System.ArgumentNullException(nameof(entry));
-
-        entry.Value = value;
-        entry.ConfigFile?.Save();
+        var entry = configFile.Bind(section, key, defaultValue,
+            getLocale($"config.{key}.description"));
+        registry[key] = entry;
+        return entry;
     }
 
-    public static void SwitchType(ConfigEntry<bool> configEntry, string configName)
+    public static bool HasConfig(string config, Dictionary<string, ConfigEntryBase> registry)
     {
-        if (configEntry == null)
-            throw new System.ArgumentNullException(nameof(configEntry));
-
-        ChangeConfig(configEntry, !configEntry.Value);
-        Info($"{LogKeyPre}switchtype", configName, configEntry.Value);
+        return registry.ContainsKey(config);
     }
 
-    public static void SwitchType(ConfigEntry<bool> configEntry, string configName,
-        ManualLogSource logger, bool important)
+    public static ConfigEntryBase GetConfig(string config, Dictionary<string, ConfigEntryBase> registry)
     {
-        if (configEntry == null)
-            throw new System.ArgumentNullException(nameof(configEntry));
+        var hasConfig = registry.TryGetValue(config, out var entry);
+        if (hasConfig)
+        {
+            return entry;
+        }
 
-        ChangeConfig(configEntry, !configEntry.Value);
-        Log.Alert(ModLocale.GetFormat($"{LogKeyPre}switchtype", configName, configEntry.Value),
-            logger, important);
+        Error("getconfig.notexistconfig", config);
+        return null;
     }
 
-    private static void Info(string key, params object[] args)
+    public static object GetConfigValue(string config, Dictionary<string, ConfigEntryBase> registry)
     {
-        Log.Info(ModLocale.GetFormat(key, args), Plugin.Logger);
+        if (registry.TryGetValue(config, out var entry))
+        {
+            return entry.BoxedValue;
+        }
+
+        Error("getconfig.notexistconfig", config);
+        return null;
+    }
+
+    public static string GetConfigKey<T>(ConfigEntry<T> configEntry, Dictionary<string, ConfigEntryBase> registry)
+    {
+        var entry = registry.FirstOrDefault(x => x.Value == configEntry)
+            .Key;
+        
+        if (!string.IsNullOrEmpty(entry))
+            return entry;
+        
+        Error("getconfig.notexistkey", configEntry, entry);
+        return null;
+    }
+
+    private static void Error(string key, params object[] args)
+    {
+        Log.Error(Locale(key, args), Plugin.Logger);
+    }
+
+    private static string Locale(string key, params object[] args)
+    {
+        return ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
     }
 }

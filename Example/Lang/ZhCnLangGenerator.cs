@@ -17,7 +17,7 @@ public class ZhCnLangGenerator : ModLangGenBase
         // Command - SpawnBlock
         Add("command.spawnblock.description", "在鼠标位置生成一个方块。");
         Add("command.spawnblock.blockid", "要生成的方块 ID。");
-        Add("command.spawnblock.invalid_blockid", "'{0}' 不是有效的方块 ID。");
+        Add("command.spawnblock.invalidblockid", "'{0}' 不是有效的方块 ID。");
         Add("command.spawnblock.success", "已生成方块 {0}。");
 
         // Command - ListBackground
@@ -28,8 +28,12 @@ public class ZhCnLangGenerator : ModLangGenBase
         // Command - SpawnBackground
         Add("command.spawnbackground.description", "在鼠标位置生成一个背景。");
         Add("command.spawnbackground.backgroundid", "要生成的背景 ID。");
-        Add("command.spawnbackground.invalid_backgroundid", "背景 ID 不能为空。");
+        Add("command.spawnbackground.invalidbackgroundid", "背景 ID 不能为空。");
         Add("command.spawnbackground.success", "已生成背景 {0}。");
+        
+        // Tool - Config
+        Add("tool.config.getconfig.notexistconfig", "不存在 {0} 这个配置");
+        Add("tool.config.getconfig.notexistket", "{0} 不存在 {1} 这个键");
 
         // Tool - Console
         Add("tool.console.nullorempty", "命令不能为空或空值");
@@ -67,6 +71,6 @@ public class ZhCnLangGenerator : ModLangGenBase
         // Add("tool.ui.widgets.text.null", "文本内容不能为 null。");
         // Add("tool.ui.widgets.button.label.null", "按钮标签不能为 null。");
         // // Tool - UI Widgets - Logs
-        // Add("tool.ui.widgets.no_template", "未找到游戏按钮模板，回退到手动构建");
+        // Add("tool.ui.widgets.notemplate", "未找到游戏按钮模板，回退到手动构建");
     }
 }

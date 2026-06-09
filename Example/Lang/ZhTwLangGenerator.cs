@@ -18,7 +18,7 @@ public class ZhTwLangGenerator : ModLangGenBase
         // Command - SpawnBlock
         Add("command.spawnblock.description", "在滑鼠位置生成一個方塊。");
         Add("command.spawnblock.blockid", "要生成的方塊 ID。");
-        Add("command.spawnblock.invalid_blockid", "'{0}' 不是有效的方塊 ID。");
+        Add("command.spawnblock.invalidblockid", "'{0}' 不是有效的方塊 ID。");
         Add("command.spawnblock.success", "已生成方塊 {0}。");
 
         // Command - ListBackground
@@ -29,7 +29,7 @@ public class ZhTwLangGenerator : ModLangGenBase
         // Command - SpawnBackground
         Add("command.spawnbackground.description", "在滑鼠位置生成一個背景。");
         Add("command.spawnbackground.backgroundid", "要生成的背景 ID。");
-        Add("command.spawnbackground.invalid_backgroundid", "背景 ID 不能為空。");
+        Add("command.spawnbackground.invalidbackgroundid", "背景 ID 不能為空。");
         Add("command.spawnbackground.success", "已生成背景 {0}。");
 
         // Tool - Console

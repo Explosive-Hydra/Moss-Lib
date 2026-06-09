@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/Black-Moss/Moss-Lib</RepositoryUrl>
     <PackageId>MossLib</PackageId>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
@@ -41,15 +41,6 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="com.lachee.discordrpc.runtime">
-      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\com.lachee.discordrpc.runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="DiscordRPC">
-      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\DiscordRPC.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Registry">
-      <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>F:\SteamLibrary\steamapps\common\Casualties Unknown Demo\CasualtiesUnknown_Data\Managed\Mono.Security.dll</HintPath>
@@ -421,4 +412,3 @@
     />
   </Target>
 </Project>
-

@@ -10,39 +10,6 @@ namespace MossLib.Tool;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Key
 {
-    public static bool HasKey(string action)
-    {
-        if (action == null)
-            throw new ArgumentNullException(nameof(action));
-
-        if (string.IsNullOrWhiteSpace(action))
-            return false;
-
-        if (KeyBinds.binds.binds == null)
-            KeyBinds.LoadBindsFromFile();
-
-        return KeyBinds.binds.codeBinds != null
-               && KeyBinds.binds.codeBinds.ContainsKey(action);
-    }
-
-    public static bool IsKey(string action)
-    {
-        var keyCode = ResolveKeyCode(action);
-        return keyCode != KeyCode.None && Input.GetKey(keyCode);
-    }
-
-    public static bool IsKeyDown(string action)
-    {
-        var keyCode = ResolveKeyCode(action);
-        return keyCode != KeyCode.None && Input.GetKeyDown(keyCode);
-    }
-
-    public static bool IsKeyUp(string action)
-    {
-        var keyCode = ResolveKeyCode(action);
-        return keyCode != KeyCode.None && Input.GetKeyUp(keyCode);
-    }
-
     private static Camera _mainCamera;
     private static bool _cameraSearched;
 
@@ -56,27 +23,27 @@ public static class Key
 
     public static Vector2 LeftClickPosition()
     {
-        return !IsKeyDown(InputAction.LeftClick) 
+        return !Input.GetKeyDown(InputAction.LeftClick)
             ? Vector2.zero
             : MouseWorldPosition();
     }
 
     public static Vector2 RightClickPosition()
     {
-        return !IsKeyDown(InputAction.RightClick)
-            ? Vector2.zero 
+        return !Input.GetKeyDown(InputAction.RightClick)
+            ? Vector2.zero
             : MouseWorldPosition();
     }
 
     public static IEnumerator WaitForLeftClick(Action<Vector2> callback)
     {
-        yield return new WaitUntil(() => IsKeyDown(InputAction.LeftClick));
+        yield return new WaitUntil(() => Input.GetKeyDown(InputAction.LeftClick));
         callback?.Invoke(MouseWorldPosition());
     }
 
     public static IEnumerator WaitForRightClick(Action<Vector2> callback)
     {
-        yield return new WaitUntil(() => IsKeyDown(InputAction.RightClick));
+        yield return new WaitUntil(() => Input.GetKeyDown(InputAction.RightClick));
         callback?.Invoke(MouseWorldPosition());
     }
 
@@ -117,23 +84,6 @@ public static class Key
         return false;
     }
 
-    private static KeyCode ResolveKeyCode(string action)
-    {
-        if (action == null)
-            throw new ArgumentNullException(nameof(action));
-
-        if (string.IsNullOrWhiteSpace(action))
-            return KeyCode.None;
-
-        if (KeyBinds.binds.binds == null)
-            KeyBinds.LoadBindsFromFile();
-
-        return KeyBinds.binds.codeBinds != null
-               && KeyBinds.binds.codeBinds.TryGetValue(action, out var keyCode)
-            ? keyCode
-            : KeyCode.None;
-    }
-
     public static class InputAction
     {
         public const string LeftClick = "attack";
@@ -154,7 +104,7 @@ public static class Key
                 if (field)
                     return false;
 
-                if (!IsKeyDown(_action))
+                if (!Input.GetKeyDown(_action))
                     return true;
 
                 Result = MouseWorldPosition();

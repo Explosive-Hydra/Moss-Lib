@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
     public new static ManualLogSource Logger;
     public const string Guid = "org.explosivehydra.mosslib";
     public const string Name = "Moss Lib";
-    public const string Version = "1.1.1";
+    public const string Version = "1.1.2";
     private readonly Harmony _harmony = new(Guid);
 
     private const string LocaleKeyPre = "mosslib.";

@@ -35,7 +35,7 @@ public class ModCommand : ModCommandBase
 
                 if (!ushort.TryParse(args[1], out var blockId))
                 {
-                    Log.Error(Locale("spawnblock.invalid_blockid", args[1]), Logger);
+                    Log.Error(Locale("spawnblock.invalidblockid", args[1]), Logger);
                     return;
                 }
 
@@ -60,7 +60,7 @@ public class ModCommand : ModCommandBase
                 var backgroundId = args[1];
                 if (string.IsNullOrWhiteSpace(backgroundId))
                 {
-                    Log.Error(Locale("spawnbackground.invalid_backgroundid"), Logger);
+                    Log.Error(Locale("spawnbackground.invalidbackgroundid"), Logger);
                     return;
                 }
 

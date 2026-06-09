@@ -17,7 +17,7 @@ public class EnLangGenerator : ModLangGenBase
         // Command - SpawnBlock
         Add("command.spawnblock.description", "Spawns a block at the cursor position.");
         Add("command.spawnblock.blockid", "The ID of the block to spawn.");
-        Add("command.spawnblock.invalid_blockid", "'{0}' is not a valid block ID.");
+        Add("command.spawnblock.invalidblockid", "'{0}' is not a valid block ID.");
         Add("command.spawnblock.success", "Spawned block {0}.");
 
         // Command - ListBackground
@@ -28,7 +28,7 @@ public class EnLangGenerator : ModLangGenBase
         // Command - SpawnBackground
         Add("command.spawnbackground.description", "Spawns a background at the cursor position.");
         Add("command.spawnbackground.backgroundid", "The ID of the background to spawn.");
-        Add("command.spawnbackground.invalid_backgroundid", "Background ID cannot be empty.");
+        Add("command.spawnbackground.invalidbackgroundid", "Background ID cannot be empty.");
         Add("command.spawnbackground.success", "Spawned background {0}.");
 
         // Tool - Console

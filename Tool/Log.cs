@@ -61,12 +61,6 @@ public static class Log
         logger.LogInfo(text);
     }
 
-    public static void Debug(string text, ManualLogSource logger)
-    {
-        LogToConsole($"[DEBUG] {text}");
-        logger.LogDebug(text);
-    }
-
     public static void Error(string text, ManualLogSource logger)
     {
         LogToConsole($"[ERROR] {text}");
