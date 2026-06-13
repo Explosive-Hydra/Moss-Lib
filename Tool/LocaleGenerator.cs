@@ -95,14 +95,7 @@ public static class LocaleGenerator
 
         generator.Generate(outputDirectory);
     }
-
-    internal static void InitializeDefaults()
-    {
-        Generators.Clear();
-        Register(new EnLangGenerator(), _logger);
-        Register(new ZhCnLangGenerator(), _logger);
-        Register(new ZhTwLangGenerator(), _logger);
-    }
+   
 
     internal static void PrintInfo()
     {
