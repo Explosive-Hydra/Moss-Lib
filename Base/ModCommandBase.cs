@@ -10,58 +10,47 @@ namespace MossLib.Base;
 public abstract class ModCommandBase
 {
     private static readonly object Lock = new();
-    private ManualLogSource _log;
     private bool _isInitialized;
-    
+
     private string _lastErr = "";
+
+    // 提供受保护的方法供子类使用
+    protected ManualLogSource Logger { get; private set; }
 
     protected void Initialize(ManualLogSource logger, Assembly pluginAssembly, Harmony harmonyInstance = null)
     {
         if (_isInitialized)
         {
-            logger.LogWarning($"ModCommandBase has already been initialized");
+            logger.LogWarning("ModCommandBase has already been initialized");
             return;
         }
 
         lock (Lock)
         {
             if (_isInitialized) return;
-            
-            _log = logger;
-            
+
+            Logger = logger;
+
             var pluginAttribute = (BepInPlugin)Attribute.GetCustomAttribute(pluginAssembly, typeof(BepInPlugin));
             var pluginGuid = pluginAttribute?.GUID ?? "unknown.plugin";
-            
+
             var harmony = harmonyInstance ?? new Harmony($"{pluginGuid}.modcommand");
             harmony.PatchAll(GetType());
-                
-            _isInitialized = true;
-        }
-    }
 
-    [HarmonyPatch(typeof(ConsoleScript), "RegisterAllCommands")]
-    public class ConsoleScriptPatcher
-    {
-        [HarmonyPostfix]
-        // ReSharper disable once UnusedMember.Global
-        public static void RegisterModCommands()
-        {
+            _isInitialized = true;
         }
     }
 
     protected void LogToConsole(string text)
     {
-        if (ConsoleScript.instance != null)
-        {
-            ConsoleScript.instance.ExecuteCommand($"log {text.Replace(" ", " ")}");
-        }
+        if (ConsoleScript.instance != null) ConsoleScript.instance.ExecuteCommand($"log {text.Replace(" ", " ")}");
     }
 
     public void ApplicationLogCallback(string condition, string stackTrace, LogType type)
     {
         if (_lastErr == condition)
             return;
-            
+
         _lastErr = condition;
 
         switch (type)
@@ -81,6 +70,16 @@ public abstract class ModCommandBase
         }
     }
 
+    [HarmonyPatch(typeof(ConsoleScript), "RegisterAllCommands")]
+    public class ConsoleScriptPatcher
+    {
+        [HarmonyPostfix]
+        // ReSharper disable once UnusedMember.Global
+        public static void RegisterModCommands()
+        {
+        }
+    }
+
     [HarmonyPatch(typeof(ConsoleScript), "Awake")]
     public class ConsoleScriptAwakePatcher
     {
@@ -90,7 +89,4 @@ public abstract class ModCommandBase
         {
         }
     }
-    
-    // 提供受保护的方法供子类使用
-    protected ManualLogSource Logger => _log;
 }

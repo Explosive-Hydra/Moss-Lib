@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -13,38 +14,37 @@ namespace MossLib.Base;
 
 public abstract class ModLocaleBase
 {
-    private static readonly object Lock = new();
-    private ManualLogSource _log;
-    private bool _isInitialized;
-    private System.Reflection.Assembly _pluginAssembly;
-
     private const string LangDirectory = "Lang";
+    private static readonly object Lock = new();
     private JObject _currentLang = new();
     private JObject _englishLang = new();
-    
-    protected void Initialize(ManualLogSource logger, System.Reflection.Assembly pluginAssembly, Harmony harmonyInstance = null)
+    private bool _isInitialized;
+    private ManualLogSource _log;
+    private Assembly _pluginAssembly;
+
+    protected void Initialize(ManualLogSource logger, Assembly pluginAssembly, Harmony harmonyInstance = null)
     {
         if (_isInitialized)
         {
-            logger.LogWarning($"ModLocaleBase has already been initialized");
+            logger.LogWarning("ModLocaleBase has already been initialized");
             return;
         }
 
         lock (Lock)
         {
             if (_isInitialized) return;
-            
+
             _log = logger;
             _pluginAssembly = pluginAssembly;
-            
+
             var pluginAttribute = (BepInPlugin)Attribute.GetCustomAttribute(pluginAssembly, typeof(BepInPlugin));
             var pluginGuid = pluginAttribute?.GUID ?? "unknown.plugin";
             var pluginName = pluginAttribute?.Name ?? "Unknown Plugin";
-            
+
             var harmony = harmonyInstance ?? new Harmony($"{pluginGuid}.modlocale");
             harmony.PatchAll(GetType());
-                
-            LoadLanguageFiles(); 
+
+            LoadLanguageFiles();
             _isInitialized = true;
         }
     }
@@ -52,32 +52,32 @@ public abstract class ModLocaleBase
     private void LoadLanguageFiles()
     {
         var currentLangName = PlayerPrefs.GetString("locale", "EN");
-    
+
         var pluginAssembly = _pluginAssembly;
         var pluginDirectory = Path.GetDirectoryName(pluginAssembly.Location);
-    
+
         if (string.IsNullOrEmpty(pluginDirectory))
         {
             _log?.LogError("Failed to get plugin directory");
             return;
         }
-    
+
         var langDirectory = Path.Combine(pluginDirectory, LangDirectory);
-        
+
         if (!Directory.Exists(langDirectory))
         {
             Directory.CreateDirectory(langDirectory);
             _log?.LogWarning($"Created language directory: {langDirectory}");
         }
-        
+
         var langFilePath = Path.Combine(langDirectory, $"{currentLangName}.json");
         var englishFilePath = Path.Combine(langDirectory, "EN.json");
-        
+
         try
         {
             LoadLanguageFile(langFilePath, ref _currentLang, currentLangName);
             LoadLanguageFile(englishFilePath, ref _englishLang, "EN");
-            
+
             _log?.LogInfo($"Language files loaded successfully - Current language: {currentLangName}");
         }
         catch (JsonReaderException ex)
@@ -118,31 +118,28 @@ public abstract class ModLocaleBase
         try
         {
             var currentValue = GetJsonValue(_currentLang, key);
-            if (currentValue != null && currentValue.Type != JTokenType.Null)
-            {
-                return currentValue.ToString();
-            }
-            
+            if (currentValue != null && currentValue.Type != JTokenType.Null) return currentValue.ToString();
+
             var englishValue = GetJsonValue(_englishLang, key);
             if (englishValue != null && englishValue.Type != JTokenType.Null)
             {
                 _log?.LogWarning($"Translation key '{key}' not found in current language, using English fallback");
                 return englishValue.ToString();
             }
-            
+
             _log?.LogError($"Translation key '{key}' not found in both current language and English fallback");
             return $"[{key}]";
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             _log?.LogError($"Error getting localized string \"{key}\": {ex.Message}");
             return $"[{key}]";
         }
     }
-    
+
     protected string GetStringOnDictionary(string dictionary, string key)
     {
-        Dictionary<string, string> stringDictionary = GetStringDictionary(dictionary);
+        var stringDictionary = GetStringDictionary(dictionary);
         return stringDictionary[key];
     }
 
@@ -163,16 +160,13 @@ public abstract class ModLocaleBase
     protected string GetStringFormatted(string key, params object[] args)
     {
         var template = GetString(key);
-        if (string.IsNullOrEmpty(template) || (template.StartsWith("[") && template.EndsWith("]")))
-        {
-            return template;
-        }
-            
+        if (string.IsNullOrEmpty(template) || (template.StartsWith("[") && template.EndsWith("]"))) return template;
+
         try
         {
             return string.Format(template, args);
         }
-        catch (System.FormatException ex)
+        catch (FormatException ex)
         {
             _log?.LogError($"String formatting failed Key: {key}, Template: {template}, Error: {ex.Message}");
             return template;
@@ -183,28 +177,28 @@ public abstract class ModLocaleBase
     {
         if (jsonObject == null || string.IsNullOrEmpty(path))
             return null;
-            
+
         if (jsonObject.TryGetValue(path, out var directValue))
             return directValue;
-            
+
         var tokens = path.Split('.');
         JToken current = jsonObject;
-        
+
         foreach (var token in tokens)
         {
-            if (current == null || current.Type == JTokenType.Null) 
+            if (current == null || current.Type == JTokenType.Null)
                 return null;
-            
+
             if (token.Contains('[') && token.Contains(']'))
             {
                 var parts = token.Split('[', ']');
                 var propertyName = parts[0];
                 var indexStr = parts[1];
-                
+
                 if (!string.IsNullOrEmpty(propertyName))
                 {
                     current = current[propertyName];
-                    if (current == null || current.Type == JTokenType.Null) 
+                    if (current == null || current.Type == JTokenType.Null)
                         return null;
                 }
 
@@ -220,23 +214,23 @@ public abstract class ModLocaleBase
                 current = current[token];
             }
         }
-        
+
         return current;
     }
 
     private bool TryGetValue<T>(string key, out T result, JObject currentLang, JObject englishLang) where T : JToken
     {
         result = GetJsonValue(currentLang, key) as T;
-        if (result != null && result.Type != JTokenType.Null) 
+        if (result != null && result.Type != JTokenType.Null)
             return true;
-        
+
         result = GetJsonValue(englishLang, key) as T;
         if (result != null && result.Type != JTokenType.Null)
         {
             _log?.LogWarning($"Translation key '{key}' not found in current language, using English fallback");
             return true;
         }
-        
+
         _log?.LogError($"Translation key '{key}' not found");
         result = null;
         return false;

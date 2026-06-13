@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using MossLib.Example;
 
 namespace MossLib.Tool;
@@ -8,18 +9,17 @@ namespace MossLib.Tool;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class GameConsole
 {
-    public static readonly ConsoleScript Instance = ConsoleScript.instance;
-
     private const string LocaleKeyPre = "tool.console.";
+    public static readonly ConsoleScript Instance = ConsoleScript.instance;
 
     public static void RunCommand(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
-            throw new System.ArgumentException(
+            throw new ArgumentException(
                 ModLocale.GetFormat($"{LocaleKeyPre}nullorempty"), nameof(key));
 
         if (Instance == null)
-            throw new System.InvalidOperationException(
+            throw new InvalidOperationException(
                 ModLocale.GetFormat($"{LocaleKeyPre}notinitialized"));
 
         ConsoleScript.SearchExact(key).action(key.Split());

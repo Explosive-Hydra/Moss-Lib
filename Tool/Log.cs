@@ -78,10 +78,4 @@ public static class Log
         Info(text, logger);
         Player.Alert(text, important, delay);
     }
-
-    [Obsolete("Use Alert() instead")]
-    public static void Cla(string text, ManualLogSource logger, bool important, float delay = 0f)
-    {
-        Alert(text, logger, important, delay);
-    }
 }

@@ -39,7 +39,7 @@ public class EnLangGenerator : ModLangGenBase
         Add("tool.world.checkforworld", "No world is loaded. Try starting a game?");
         Add("tool.world.placeblock", "Failed to spawn block {1} at {0}: {2}");
         Add("tool.world.placeitem", "Failed to spawn item {1} at {0}: {2}");
-        Add("tool.world.placeitem.nullorempty", "Item cannot be null or empty");   
+        Add("tool.world.placeitem.nullorempty", "Item cannot be null or empty");
         Add("tool.world.trygetsprite", "Background sprite not found: {0}");
 
 

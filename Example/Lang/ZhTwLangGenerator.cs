@@ -40,7 +40,7 @@ public class ZhTwLangGenerator : ModLangGenBase
         Add("tool.world.checkforworld", "沒有加載任何世界。要不試試開始遊戲?");
         Add("tool.world.placeblock", "在 {0} 生成方塊 {1} 失敗:{2}");
         Add("tool.world.placeitem", "在 {0} 生成物品 {1} 失敗:{2}");
-        Add("tool.world.placeitem.nullorempty", "物品不能為空或空值");  
+        Add("tool.world.placeitem.nullorempty", "物品不能為空或空值");
         Add("tool.world.trygetsprite", "未找到背景精靈: {0}");
 
         // Tool - Player

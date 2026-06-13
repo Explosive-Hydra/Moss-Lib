@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BepInEx.Logging;
 using MossLib.Base;
-using MossLib.Example.Lang;
 
 namespace MossLib.Tool;
 
@@ -47,8 +46,8 @@ public static class LocaleGenerator
         EnsureLogger();
         Info("=== Starting localization file generation ===");
 
-        int successCount = 0;
-        int failureCount = 0;
+        var successCount = 0;
+        var failureCount = 0;
 
         foreach (var generator in Generators)
         {
@@ -95,7 +94,7 @@ public static class LocaleGenerator
 
         generator.Generate(outputDirectory);
     }
-   
+
 
     internal static void PrintInfo()
     {

@@ -1,6 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using MossLib.Example;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MossLib.Tool;
 
@@ -47,7 +49,7 @@ public static class Player
         else
         {
             if (PlayerCamera.main.body == null)
-                throw new System.InvalidOperationException(Locale("bodynull"));
+                throw new InvalidOperationException(Locale("bodynull"));
 
             PlayerCamera.main.body.transform.position = vector2;
             PlayerCamera.main.transform.position = vector2;
@@ -64,31 +66,31 @@ public static class Player
         World.CheckForWorld();
 
         if (string.IsNullOrWhiteSpace(item))
-            throw new System.ArgumentException(
+            throw new ArgumentException(
                 Locale("item.nullorempty"), nameof(item));
 
-        if (slot 
-            is < 0 
+        if (slot
+            is < 0
             or >= MaxInventorySlots)
-            throw new System.ArgumentOutOfRangeException(nameof(slot), slot,
+            throw new ArgumentOutOfRangeException(nameof(slot), slot,
                 Locale("slot.outofrange", MaxInventorySlots));
 
         if (PlayerCamera.main.body == null)
-            throw new System.InvalidOperationException(Locale("bodynull"));
+            throw new InvalidOperationException(Locale("bodynull"));
 
         var body = PlayerCamera.main.body;
         var position = body.transform.position;
 
         var createdObject = Utils.Create(item, position, 0.0f);
         if (createdObject == null)
-            throw new System.InvalidOperationException(
+            throw new InvalidOperationException(
                 Locale("loaditem.fail", item));
 
         var itemComponent = createdObject.GetComponent<Item>();
         if (itemComponent == null)
         {
             Object.Destroy(createdObject);
-            throw new System.InvalidOperationException(
+            throw new InvalidOperationException(
                 Locale("loaditem.missingcomponent", item));
         }
 

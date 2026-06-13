@@ -29,5 +29,5 @@ public static class Keys
     public static KeyCode Craft = KeyBinds.GetBind("craft");
     public static KeyCode Bark = KeyBinds.GetBind("bark");
     public static KeyCode Favourite = KeyBinds.GetBind("favourite");
-    public static KeyCode QuickStash =  KeyBinds.GetBind("quickstash");
+    public static KeyCode QuickStash = KeyBinds.GetBind("quickstash");
 }

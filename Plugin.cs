@@ -15,22 +15,22 @@ public class Plugin : BaseUnityPlugin
     public const string Guid = "org.explosivehydra.mosslib";
     public const string Name = "Moss Lib";
     public const string Version = "1.1.2";
-    private readonly Harmony _harmony = new(Guid);
+    private const string LocaleKeyPre = "mosslib.";
     public new static ManualLogSource Logger;
     private static readonly Dictionary<string, ConfigEntryBase> Registry = new();
-    private const string LocaleKeyPre = "mosslib.";
-    
+
     public static ConfigEntry<string> Test;
+    private readonly Harmony _harmony = new(Guid);
 
 
     public void Awake()
     {
         Logger = base.Logger;
-        
+
         LocaleGenerator.SetLogger(Logger);
         LocaleGenerator.Register(new EnLangGenerator(), Logger);
         LocaleGenerator.Register(new ZhCnLangGenerator(), Logger);
-        LocaleGenerator.Register(new ZhTwLangGenerator(), Logger);    
+        LocaleGenerator.Register(new ZhTwLangGenerator(), Logger);
         LocaleGenerator.GenerateAll();
 
         ModLocale.Initialize(Logger);
@@ -39,10 +39,10 @@ public class Plugin : BaseUnityPlugin
         Test = RegisterConfig(Config, "Test", "test", "test");
         Locale("welcome");
     }
-    
+
     private static ConfigEntry<T> RegisterConfig<T>(ConfigFile configFile, string section, string key, T defaultValue)
     {
-        return MossLib.Tool.Config.Register(configFile, section, key, defaultValue,
+        return Tool.Config.Register(configFile, section, key, defaultValue,
             _ => Locale($"config.{section}.{key}.description"), Registry);
     }
 

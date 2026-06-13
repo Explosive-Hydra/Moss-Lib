@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MossLib.Example;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MossLib.Tool;
 
@@ -146,11 +147,11 @@ public static class World
             return;
 
         var worldPos2 = WorldGeneration.world.BlockToWorldPos(pos);
-        var go = UnityEngine.Object.Instantiate(template, worldPos2, Quaternion.identity);
+        var go = Object.Instantiate(template, worldPos2, Quaternion.identity);
         go.name = $"BgTile_{pos.x}_{pos.y}";
         go.SetActive(true);
 
-        Transform parent = WorldGeneration.world.worldGrid?.transform;
+        var parent = WorldGeneration.world.worldGrid?.transform;
         if (parent == null)
         {
             var chunk = WorldGeneration.world.GetClosestChunk(pos);
@@ -172,14 +173,12 @@ public static class World
     private static Material GetOrCreateBgMaterial(Sprite sprite)
     {
         if (_cachedBgMaterial == null)
-        {
             _cachedBgMaterial = new Material(WorldGeneration.world.defaultMat)
             {
                 mainTextureScale = Vector2.one,
                 mainTextureOffset = Vector2.one,
                 color = Color.gray
             };
-        }
 
         _cachedBgMaterial.mainTexture = sprite.texture;
         return _cachedBgMaterial;
@@ -230,7 +229,7 @@ public static class World
         _cachedBgTemplate.AddComponent<MeshFilter>();
         _cachedBgTemplate.AddComponent<MeshRenderer>();
         _cachedBgTemplate.SetActive(false);
-        UnityEngine.Object.DontDestroyOnLoad(_cachedBgTemplate);
+        Object.DontDestroyOnLoad(_cachedBgTemplate);
         return _cachedBgTemplate;
     }
 
@@ -264,13 +263,13 @@ public static class World
 
         if (_cachedBgTemplate != null)
         {
-            UnityEngine.Object.Destroy(_cachedBgTemplate);
+            Object.Destroy(_cachedBgTemplate);
             _cachedBgTemplate = null;
         }
 
         if (_cachedBgMaterial != null)
         {
-            UnityEngine.Object.Destroy(_cachedBgMaterial);
+            Object.Destroy(_cachedBgMaterial);
             _cachedBgMaterial = null;
         }
     }

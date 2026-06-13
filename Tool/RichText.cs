@@ -27,19 +27,70 @@ public static class RichText
         return Color(text, hex);
     }
 
-    public static string Blue(string text) => Color(text, "blue");
-    public static string Red(string text) => Color(text, "red");
-    public static string Green(string text) => Color(text, "green");
-    public static string Yellow(string text) => Color(text, "yellow");
-    public static string White(string text) => Color(text, "white");
-    public static string Black(string text) => Color(text, "black");
-    public static string Cyan(string text) => Color(text, "cyan");
-    public static string Magenta(string text) => Color(text, "magenta");
-    public static string Gray(string text) => Color(text, "gray");
-    public static string Orange(string text) => Color(text, "orange");
-    public static string Purple(string text) => Color(text, "purple");
-    public static string Pink(string text) => Color(text, "pink");
-    public static string Brown(string text) => Color(text, "brown");
+    public static string Blue(string text)
+    {
+        return Color(text, "blue");
+    }
+
+    public static string Red(string text)
+    {
+        return Color(text, "red");
+    }
+
+    public static string Green(string text)
+    {
+        return Color(text, "green");
+    }
+
+    public static string Yellow(string text)
+    {
+        return Color(text, "yellow");
+    }
+
+    public static string White(string text)
+    {
+        return Color(text, "white");
+    }
+
+    public static string Black(string text)
+    {
+        return Color(text, "black");
+    }
+
+    public static string Cyan(string text)
+    {
+        return Color(text, "cyan");
+    }
+
+    public static string Magenta(string text)
+    {
+        return Color(text, "magenta");
+    }
+
+    public static string Gray(string text)
+    {
+        return Color(text, "gray");
+    }
+
+    public static string Orange(string text)
+    {
+        return Color(text, "orange");
+    }
+
+    public static string Purple(string text)
+    {
+        return Color(text, "purple");
+    }
+
+    public static string Pink(string text)
+    {
+        return Color(text, "pink");
+    }
+
+    public static string Brown(string text)
+    {
+        return Color(text, "brown");
+    }
 
     public static string Alpha(string text, string alphaHex)
     {

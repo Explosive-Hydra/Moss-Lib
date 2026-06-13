@@ -31,10 +31,7 @@ public static class Config
     public static ConfigEntryBase GetConfig(string config, Dictionary<string, ConfigEntryBase> registry)
     {
         var hasConfig = registry.TryGetValue(config, out var entry);
-        if (hasConfig)
-        {
-            return entry;
-        }
+        if (hasConfig) return entry;
 
         Error("getconfig.notexistconfig", config);
         return null;
@@ -42,10 +39,7 @@ public static class Config
 
     public static object GetConfigValue(string config, Dictionary<string, ConfigEntryBase> registry)
     {
-        if (registry.TryGetValue(config, out var entry))
-        {
-            return entry.BoxedValue;
-        }
+        if (registry.TryGetValue(config, out var entry)) return entry.BoxedValue;
 
         Error("getconfig.notexistconfig", config);
         return null;
@@ -55,10 +49,10 @@ public static class Config
     {
         var entry = registry.FirstOrDefault(x => x.Value == configEntry)
             .Key;
-        
+
         if (!string.IsNullOrEmpty(entry))
             return entry;
-        
+
         Error("getconfig.notexistkey", configEntry, entry);
         return null;
     }

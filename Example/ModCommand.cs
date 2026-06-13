@@ -48,7 +48,7 @@ public class ModCommand : ModCommandBase
             },
             ("blockid", Locale("spawnblock.blockid")))
         );
-        
+
         ConsoleScript.Commands.Add(new Command(
             "spawnbackground",
             Locale("spawnbackground.description"),
@@ -161,10 +161,7 @@ public class ModCommand : ModCommandBase
     {
         var text = Locale("testhello.description");
         var result = "";
-        for (int i = 0; i < text.Length; i++)
-        {
-            result += RichText.Size(text[i].ToString(), (i + 3) * 9);
-        }
+        for (var i = 0; i < text.Length; i++) result += RichText.Size(text[i].ToString(), (i + 3) * 9);
 
         return result;
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using BepInEx.Logging;
 using HarmonyLib;
 using Newtonsoft.Json;
@@ -10,21 +11,30 @@ namespace MossLib.Base;
 
 public abstract class ModLangGenBase
 {
-    protected abstract string LanguageCode { get; }
-    private Dictionary<string, string> LocaleData { get; } = new();
     private const string LangDirectory = "Lang";
     private bool _isInitialized;
-    private System.Reflection.Assembly _ownerAssembly = System.Reflection.Assembly.GetCallingAssembly();
     private ManualLogSource _log;
+    private Assembly _ownerAssembly = Assembly.GetCallingAssembly();
+    protected abstract string LanguageCode { get; }
+    private Dictionary<string, string> LocaleData { get; } = new();
 
-    internal void Initialize(ManualLogSource logger, System.Reflection.Assembly pluginAssembly, Harmony harmonyInstance = null)
+    public int Count
+    {
+        get
+        {
+            EnsureInitialized();
+            return LocaleData?.Count ?? 0;
+        }
+    }
+
+    internal void Initialize(ManualLogSource logger, Assembly pluginAssembly, Harmony harmonyInstance = null)
     {
         if (_isInitialized)
             return;
 
         _log = logger;
         _ownerAssembly = pluginAssembly;
-        
+
         BuildLocaleData();
         _isInitialized = true;
     }
@@ -40,9 +50,7 @@ public abstract class ModLangGenBase
         }
 
         if (LocaleData.ContainsKey(key))
-        {
             _log?.LogWarning($"[{LanguageCode}] Warning: Key '{key}' already exists and will be overwritten");
-        }
 
         LocaleData[key] = value;
     }
@@ -63,10 +71,7 @@ public abstract class ModLangGenBase
             outputDirectory = Path.Combine(pluginDirectory, LangDirectory);
         }
 
-        if (!Directory.Exists(outputDirectory))
-        {
-            Directory.CreateDirectory(outputDirectory);
-        }
+        if (!Directory.Exists(outputDirectory)) Directory.CreateDirectory(outputDirectory);
 
         try
         {
@@ -74,7 +79,6 @@ public abstract class ModLangGenBase
 
             JObject existingJson = null;
             if (File.Exists(filePath))
-            {
                 try
                 {
                     var existingContent = File.ReadAllText(filePath);
@@ -84,23 +88,20 @@ public abstract class ModLangGenBase
                 {
                     _log?.LogWarning($"[{LanguageCode}] Failed to parse existing file, will regenerate: {ex.Message}");
                 }
-            }
 
             JObject resultJson;
-            int newEntries = 0;
+            var newEntries = 0;
 
             if (existingJson != null)
             {
                 var existingKeys = FlattenJson(existingJson);
 
                 foreach (var kvp in LocaleData)
-                {
                     if (!existingKeys.ContainsKey(kvp.Key))
                     {
                         SetNestedValue(existingJson, kvp.Key, kvp.Value);
                         newEntries++;
                     }
-                }
 
                 resultJson = existingJson;
             }
@@ -114,13 +115,9 @@ public abstract class ModLangGenBase
             File.WriteAllText(filePath, jsonContent + Environment.NewLine);
 
             if (newEntries > 0)
-            {
                 _log?.LogInfo($"[{LanguageCode}] ✓ Added {newEntries} new entries to: {filePath}");
-            }
             else
-            {
                 _log?.LogInfo($"[{LanguageCode}] All entries already exist, no changes: {filePath}");
-            }
         }
         catch (Exception ex)
         {
@@ -132,10 +129,7 @@ public abstract class ModLangGenBase
     {
         var root = new JObject();
 
-        foreach (var kvp in LocaleData)
-        {
-            SetNestedValue(root, kvp.Key, kvp.Value);
-        }
+        foreach (var kvp in LocaleData) SetNestedValue(root, kvp.Key, kvp.Value);
 
         return root;
     }
@@ -143,16 +137,13 @@ public abstract class ModLangGenBase
     private static void SetNestedValue(JObject root, string path, string value)
     {
         var keys = path.Split('.');
-        JObject current = root;
+        var current = root;
 
-        for (int i = 0; i < keys.Length - 1; i++)
+        for (var i = 0; i < keys.Length - 1; i++)
         {
             var key = keys[i];
 
-            if (!current.ContainsKey(key) || current[key].Type != JTokenType.Object)
-            {
-                current[key] = new JObject();
-            }
+            if (!current.ContainsKey(key) || current[key].Type != JTokenType.Object) current[key] = new JObject();
 
             current = (JObject)current[key];
         }
@@ -178,14 +169,12 @@ public abstract class ModLangGenBase
                     var newPrefix = string.IsNullOrEmpty(prefix) ? prop.Name : $"{prefix}.{prop.Name}";
                     FlattenJsonRecursive(prop.Value, newPrefix, result);
                 }
+
                 break;
             }
             case JArray array:
             {
-                for (var i = 0; i < array.Count; i++)
-                {
-                    FlattenJsonRecursive(array[i], $"{prefix}[{i}]", result);
-                }
+                for (var i = 0; i < array.Count; i++) FlattenJsonRecursive(array[i], $"{prefix}[{i}]", result);
                 break;
             }
             case JValue value:
@@ -197,17 +186,6 @@ public abstract class ModLangGenBase
     private void EnsureInitialized()
     {
         if (!_isInitialized)
-        {
             throw new InvalidOperationException($"{GetType().Name} has not been initialized. Call Initialize() first.");
-        }
-    }
-
-    public int Count
-    {
-        get
-        {
-            EnsureInitialized();
-            return LocaleData?.Count ?? 0;
-        }
     }
 }

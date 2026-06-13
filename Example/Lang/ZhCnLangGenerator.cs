@@ -5,6 +5,7 @@ namespace MossLib.Example.Lang;
 public class ZhCnLangGenerator : ModLangGenBase
 {
     protected override string LanguageCode => "zh-CN";
+
     protected override void BuildLocaleData()
     {
         // Welcome
@@ -30,7 +31,7 @@ public class ZhCnLangGenerator : ModLangGenBase
         Add("command.spawnbackground.backgroundid", "要生成的背景 ID。");
         Add("command.spawnbackground.invalidbackgroundid", "背景 ID 不能为空。");
         Add("command.spawnbackground.success", "已生成背景 {0}。");
-        
+
         // Tool - Config
         Add("tool.config.getconfig.notexistconfig", "不存在 {0} 这个配置");
         Add("tool.config.getconfig.notexistket", "{0} 不存在 {1} 这个键");

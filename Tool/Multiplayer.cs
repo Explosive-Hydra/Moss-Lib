@@ -1,8 +1,8 @@
-﻿using BepInEx;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using BepInEx;
 using MossLib.Example;
+using UnityEngine;
 
 namespace MossLib.Tool;
 
@@ -15,15 +15,6 @@ public static class Multiplayer
 
     private static Type _krokoshaType;
     private static bool _initialized;
-
-    private static void Initialize()
-    {
-        if (_initialized)
-            return;
-
-        _krokoshaType = Type.GetType("KrokoshaScavMultiplayer, KrokoshaCasualtiesMP");
-        _initialized = true;
-    }
 
     public static bool IsNetworkRunning
     {
@@ -49,6 +40,15 @@ public static class Multiplayer
             var prop = _krokoshaType.GetProperty("is_client");
             return prop != null && (bool)prop.GetValue(null, null);
         }
+    }
+
+    private static void Initialize()
+    {
+        if (_initialized)
+            return;
+
+        _krokoshaType = Type.GetType("KrokoshaScavMultiplayer, KrokoshaCasualtiesMP");
+        _initialized = true;
     }
 
     public static void Tp(Vector2 vector2)
@@ -90,7 +90,7 @@ public static class Multiplayer
             throw new InvalidOperationException(ModLocale.GetFormat("tool.player.bodynull"));
 
         bool success;
-        string actualName = playerName;
+        var actualName = playerName;
 
         if (playerName == "@a")
         {
@@ -129,18 +129,12 @@ public static class Multiplayer
             if (body != null)
             {
                 var bodyTransform = ((Component)body).transform;
-                if (bodyTransform != null)
-                {
-                    bodyTransform.position = position;
-                }
+                if (bodyTransform != null) bodyTransform.position = position;
             }
 
             var playerTransformProp = player.GetType().GetProperty("transform");
             var playerTransform = playerTransformProp?.GetValue(player, null) as Transform;
-            if (playerTransform != null)
-            {
-                playerTransform.position = position;
-            }
+            if (playerTransform != null) playerTransform.position = position;
         }
         catch (Exception ex)
         {
@@ -160,7 +154,7 @@ public static class Multiplayer
             if (method == null)
                 return false;
 
-            bool executed = false;
+            var executed = false;
             var wrapper = new Action<object>(plr =>
             {
                 action(plr);
