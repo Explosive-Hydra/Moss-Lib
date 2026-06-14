@@ -64,6 +64,16 @@ public class ZhTwLangGenerator : ModLangGenBase
         Add("tool.utils.parse.int.invalid", "'{0}' 不是有效的整數值!");
         Add("tool.utils.string.nullorempty", "輸入字串不能為空或空值");
 
+        // Tool - Inventory
+        Add("tool.inventory.bodynull", "玩家身體物件為空");
+        Add("tool.inventory.id.nullorempty", "物品 ID 不能為空或空白");
+        Add("tool.inventory.summary.header", "[物品欄]");
+        Add("tool.inventory.summary.handslot", "{0}* (手持)");
+        Add("tool.inventory.summary.slot", "{0}");
+        Add("tool.inventory.summary.empty", "空");
+        Add("tool.inventory.summary.wearables", "[穿戴]");
+        Add("tool.inventory.empty", "(空)");
+
         // // Tool - UI Widgets
         // Add("tool.ui.widgets.text.null", "文字內容不能為 null。");
         // Add("tool.ui.widgets.button.label.null", "按鈕標籤不能為 null。");

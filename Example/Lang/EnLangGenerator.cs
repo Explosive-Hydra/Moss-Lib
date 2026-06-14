@@ -64,6 +64,16 @@ public class EnLangGenerator : ModLangGenBase
         Add("tool.utils.parse.int.invalid", "'{0}' is not a valid integer value!");
         Add("tool.utils.string.nullorempty", "Input string cannot be null or empty");
 
+        // Tool - Inventory
+        Add("tool.inventory.bodynull", "Player body is null");
+        Add("tool.inventory.id.nullorempty", "Item ID cannot be null or empty");
+        Add("tool.inventory.summary.header", "[Inventory]");
+        Add("tool.inventory.summary.handslot", "{0}* (Hand)");
+        Add("tool.inventory.summary.slot", "{0}");
+        Add("tool.inventory.summary.empty", "Empty");
+        Add("tool.inventory.summary.wearables", "[Wearables]");
+        Add("tool.inventory.empty", "(empty)");
+
         // // Tool - UI Widgets
         // Add("tool.ui.widgets.text.null", "Text content cannot be null.");
         // Add("tool.ui.widgets.button.label.null", "Button label cannot be null.");
