@@ -8,6 +8,7 @@ namespace MossLib.Tool;
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public static class Inventory
 {
     private const string LocaleKeyPre = "tool.inventory.";
@@ -36,6 +37,11 @@ public static class Inventory
     {
         var body = GetBody();
         return body.GetItem(slot);
+    }
+
+    public static ItemInfo GetItemInfo(int slot)
+    {
+        return GetItem(slot)?.Stats;
     }
 
     public static string GetItemId(int slot)
@@ -71,6 +77,48 @@ public static class Inventory
         return ids.Any(body.HoldingItem);
     }
 
+    public static bool HasItem(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var body = GetBody();
+        for (var i = 0; i < body.slots.Length; i++)
+        {
+            var info = body.GetItem(i)?.Stats;
+            if (info != null && predicate(info))
+                return true;
+        }
+        return false;
+    }
+
+    public static bool HasItemThorough(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var body = GetBody();
+        return body.GetAllItemsThorough()
+            .Any(item => item.Stats != null && predicate(item.Stats));
+    }
+
+    public static bool HasItemByTag(string tag)
+    {
+        return !string.IsNullOrWhiteSpace(tag) 
+               && HasItem(info => info.HasTag(tag));
+    }
+
+    public static bool HasItemByCategory(string category)
+    {
+        return !string.IsNullOrWhiteSpace(category) 
+               && HasItem(info => info.category == category);
+    }
+
+    public static bool HasWearableItem()
+    {
+        return HasItem(info => info.wearable);
+    }
+    
     public static int CountItem(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -94,8 +142,41 @@ public static class Inventory
             return 0;
 
         var body = GetBody();
-
         return body.GetAllItemsThorough().Count(item => item.id == id);
+    }
+
+    public static int CountItem(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var body = GetBody();
+        var count = 0;
+        for (var i = 0; i < body.slots.Length; i++)
+        {
+            var info = body.GetItem(i)?.Stats;
+            if (info != null && predicate(info))
+                count++;
+        }
+
+        return count;
+    }
+
+    public static int CountItemThorough(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var body = GetBody();
+        return body.GetAllItemsThorough()
+            .Count(item => item.Stats != null && predicate(item.Stats));
+    }
+
+    public static int CountItemByTag(string tag)
+    {
+        return string.IsNullOrWhiteSpace(tag) 
+            ? 0
+            : CountItem(info => info.HasTag(tag));
     }
 
     public static List<Item> GetAllItems()
@@ -106,10 +187,7 @@ public static class Inventory
 
     public static List<string> GetAllItemIds()
     {
-        var items = GetAllItems();
-        var ids = new List<string>(items.Count);
-        ids.AddRange(items.Select(item => item.id));
-        return ids;
+        return GetAllItems().Select(item => item.id).ToList();
     }
 
     public static List<Item> GetAllItemsThorough()
@@ -118,12 +196,36 @@ public static class Inventory
         return body.GetAllItemsThorough();
     }
 
+    public static List<ItemInfo> GetAllItemInfos()
+    {
+        return GetAllItems()
+            .Select(item => item.Stats)
+            .Where(info => info != null)
+            .ToList();
+    }
+
+    public static List<ItemInfo> GetAllItemInfosThorough()
+    {
+        return GetAllItemsThorough()
+            .Select(item => item.Stats)
+            .Where(info => info != null)
+            .ToList();
+    }
+
     public static List<Item> GetWearables()
     {
         var body = GetBody();
         return body.GetAllWearables();
     }
 
+    public static List<ItemInfo> GetWearableInfos()
+    {
+        return GetWearables()
+            .Select(item => item.Stats)
+            .Where(info => info != null)
+            .ToList();
+    }
+    
     public static bool HasWearable(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -131,6 +233,13 @@ public static class Inventory
 
         var body = GetBody();
         return body.HasWearable(id);
+    }
+
+    public static bool HasWearable(Predicate<ItemInfo> predicate)
+    {
+        return predicate == null
+            ? throw new ArgumentNullException(nameof(predicate)) 
+            : GetWearableInfos().Any(info => predicate(info));
     }
 
     public static int? FindFirstEmptySlot()
@@ -150,7 +259,7 @@ public static class Inventory
         var body = GetBody();
         return body.FindByIdSurface(id, out item);
     }
-
+    
     public static bool FindByIdThorough(string id, out Item item)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -174,6 +283,52 @@ public static class Inventory
         var body = GetBody();
         return body.FindByTagThorough(tag, out item);
     }
+    
+    public static List<Item> FindAll(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var body = GetBody();
+        var result = new List<Item>();
+        for (var i = 0; i < body.slots.Length; i++)
+        {
+            var item = body.GetItem(i);
+            if (item?.Stats != null && predicate(item.Stats))
+                result.Add(item);
+        }
+        return result;
+    }
+
+    public static List<Item> FindAllThorough(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var body = GetBody();
+        return body.GetAllItemsThorough()
+            .Where(item => item.Stats != null && predicate(item.Stats))
+            .ToList();
+    }
+
+    public static List<Item> FindAllByTag(string tag)
+    {
+        return string.IsNullOrWhiteSpace(tag) 
+            ? []
+            : FindAll(info => info.HasTag(tag));
+    }
+
+    public static List<Item> FindAllByCategory(string category)
+    {
+        return string.IsNullOrWhiteSpace(category) 
+            ? []
+            : FindAll(info => info.category == category);
+    }
+
+    public static List<Item> FindAllWearableItems()
+    {
+        return FindAll(info => info.wearable);
+    }
 
     public static int GetHandSlot()
     {
@@ -187,10 +342,23 @@ public static class Inventory
         return body.GetItem(body.handSlot);
     }
 
+    public static ItemInfo GetItemInfoInHand()
+    {
+        return GetItemInHand()?.Stats;
+    }
+
     public static string GetItemIdInHand()
     {
-        var item = GetItemInHand();
-        return item != null ? item.id : null;
+        return GetItemInHand()?.id;
+    }
+
+    public static bool IsItemInHand(Predicate<ItemInfo> predicate)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        var info = GetItemInfoInHand();
+        return info != null && predicate(info);
     }
 
     public static int GetSlotCount()
@@ -215,7 +383,7 @@ public static class Inventory
         var ids = GetAllItemIds();
         return ids.Count > 0 ? string.Join(", ", ids) : Locale("empty");
     }
-
+    
     private static string Locale(string key, params object[] args)
     {
         return ModLocale.GetFormat($"{LocaleKeyPre}{key}", args);
