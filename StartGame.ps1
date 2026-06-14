@@ -3,15 +3,25 @@
     [string]$ModNamespace
 )
 
-# 自动从命名空间生成显示名称（仅大驼峰多单词时加空格）
-if ($ModNamespace -cmatch '^[A-Z][a-z]+([A-Z][a-z]+)+$')
-{
-    $ModName = $ModNamespace -replace '(?<=[a-z])([A-Z])', ' $1'
+# 自动从命名空间生成显示名称（仅在大写字母前加空格，前提是该大写字母前面是小写字母）
+function Convert-ToDisplayName {
+    param([string]$Namespace)
+    if ([string]::IsNullOrWhiteSpace($Namespace)) { return $Namespace }
+
+    $result = [System.Text.StringBuilder]::new()
+    $chars = $Namespace.ToCharArray()
+    for ($i = 0; $i -lt $chars.Length; $i++) {
+        $c = $chars[$i]
+        # 如果当前字符是大写，且前一个字符是小写，则先插入空格
+        if ($i -gt 0 -and [char]::IsUpper($c) -and [char]::IsLower($chars[$i-1])) {
+            $result.Append(' ') | Out-Null
+        }
+        $result.Append($c) | Out-Null
+    }
+    return $result.ToString()
 }
-else
-{
-    $ModName = $ModNamespace
-}
+
+$ModName = Convert-ToDisplayName -Namespace $ModNamespace
 
 # 设置编码为 UTF-8
 $OutputEncoding = [System.Text.Encoding]::UTF8
