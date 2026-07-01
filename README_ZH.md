@@ -1,3 +1,7 @@
+# 该项目已不再开发，请使用[CUCoreLib](https://github.com/jimmyking9999999/CUCoreLib)。
+# 该项目已不再开发，请使用[CUCoreLib](https://github.com/jimmyking9999999/CUCoreLib)。
+# 该项目已不再开发，请使用[CUCoreLib](https://github.com/jimmyking9999999/CUCoreLib)。
+
 ![alt text](Covor.png)
 
 [English Guide](README.md)
