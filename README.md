@@ -1,3 +1,7 @@
+# This project is no longer in develop, please use the [CUCoreLib]([https://github.com/CNCUMC/Quantum](https://github.com/jimmyking9999999/CUCoreLib)).
+# This project is no longer in develop, please use the [CUCoreLib]([https://github.com/CNCUMC/Quantum](https://github.com/jimmyking9999999/CUCoreLib)).
+# This project is no longer in develop, please use the [CUCoreLib]([https://github.com/CNCUMC/Quantum](https://github.com/jimmyking9999999/CUCoreLib)).
+
 ![alt text](Covor.png)
 
 [中文指南](README_ZH.md)
