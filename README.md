@@ -1,6 +1,6 @@
-# This project is no longer in develop, please use the [CUCoreLib]([https://github.com/CNCUMC/Quantum](https://github.com/jimmyking9999999/CUCoreLib)).
-# This project is no longer in develop, please use the [CUCoreLib]([https://github.com/CNCUMC/Quantum](https://github.com/jimmyking9999999/CUCoreLib)).
-# This project is no longer in develop, please use the [CUCoreLib]([https://github.com/CNCUMC/Quantum](https://github.com/jimmyking9999999/CUCoreLib)).
+# This project is no longer in develop, please use the [Bark](https://github.com/CNCUMC/Bark).
+# This project is no longer in develop, please use the [Bark](https://github.com/CNCUMC/Bark).
+# This project is no longer in develop, please use the [Bark](https://github.com/CNCUMC/Bark).
 
 ![alt text](Covor.png)
 
