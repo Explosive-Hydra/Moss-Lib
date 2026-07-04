@@ -1,6 +1,6 @@
-# 该项目已不再开发，请使用[CUCoreLib](https://github.com/jimmyking9999999/CUCoreLib)。
-# 该项目已不再开发，请使用[CUCoreLib](https://github.com/jimmyking9999999/CUCoreLib)。
-# 该项目已不再开发，请使用[CUCoreLib](https://github.com/jimmyking9999999/CUCoreLib)。
+# 该项目已不再开发，请使用[Bark](https://github.com/CNCUMC/Bark)。
+# 该项目已不再开发，请使用[Bark](https://github.com/CNCUMC/Bark)。
+# 该项目已不再开发，请使用[Bark](https://github.com/CNCUMC/Bark)。
 
 ![alt text](Covor.png)
 
